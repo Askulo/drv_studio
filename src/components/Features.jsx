@@ -1,5 +1,43 @@
 import { useState, useRef } from "react";
 import { TiLocationArrow } from "react-icons/ti";
+// import  { ThreeDMarquee } from "./ui/3d-marquee";
+import AnimatedTitle from "./AnimatedTitle";
+
+
+// Remove the import of Images from "lucide-react" and define your own Images array instead
+export const Images = [
+    "https://assets.aceternity.com/cloudinary_bkp/3d-card.png",
+    "https://assets.aceternity.com/animated-modal.png",
+    "https://assets.aceternity.com/animated-testimonials.webp",
+    "https://assets.aceternity.com/cloudinary_bkp/Tooltip_luwy44.png",
+    "https://assets.aceternity.com/github-globe.png",
+    "https://assets.aceternity.com/glare-card.png",
+    "https://assets.aceternity.com/layout-grid.png",
+    "https://assets.aceternity.com/flip-text.png",
+    "https://assets.aceternity.com/hero-highlight.png",
+    "https://assets.aceternity.com/carousel.webp",
+    "https://assets.aceternity.com/placeholders-and-vanish-input.png",
+    "https://assets.aceternity.com/shooting-stars-and-stars-background.png",
+    "https://assets.aceternity.com/signup-form.png",
+    "https://assets.aceternity.com/cloudinary_bkp/stars_sxle3d.png",
+    "https://assets.aceternity.com/spotlight-new.webp",
+    "https://assets.aceternity.com/cloudinary_bkp/Spotlight_ar5jpr.png",
+    "https://assets.aceternity.com/cloudinary_bkp/Parallax_Scroll_pzlatw_anfkh7.png",
+    "https://assets.aceternity.com/tabs.png",
+    "https://assets.aceternity.com/cloudinary_bkp/Tracing_Beam_npujte.png",
+    "https://assets.aceternity.com/cloudinary_bkp/typewriter-effect.png",
+    "https://assets.aceternity.com/glowing-effect.webp",
+    "https://assets.aceternity.com/hover-border-gradient.png",
+    "https://assets.aceternity.com/cloudinary_bkp/Infinite_Moving_Cards_evhzur.png",
+    "https://assets.aceternity.com/cloudinary_bkp/Lamp_hlq3ln.png",
+    "https://assets.aceternity.com/macbook-scroll.png",
+    "https://assets.aceternity.com/cloudinary_bkp/Meteors_fye3ys.png",
+    "https://assets.aceternity.com/cloudinary_bkp/Moving_Border_yn78lv.png",
+    "https://assets.aceternity.com/multi-step-loader.png",
+    "https://assets.aceternity.com/vortex.png",
+    "https://assets.aceternity.com/wobble-card.png",
+    "https://assets.aceternity.com/world-map.webp"
+];
 
 export const BentoTilt = ({ children, className = "" }) => {
   const [transformStyle, setTransformStyle] = useState("");
@@ -38,10 +76,12 @@ export const BentoTilt = ({ children, className = "" }) => {
   );
 };
 
-export const BentoCard = ({ src, title, description, isComingSoon }) => {
+export const BentoCard = ({ src, title, description, isComingSoon, bgColor = "" }) => {
   const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
   const [hoverOpacity, setHoverOpacity] = useState(0);
   const hoverButtonRef = useRef(null);
+
+  
 
   const handleMouseMove = (event) => {
     if (!hoverButtonRef.current) return;
@@ -58,13 +98,18 @@ export const BentoCard = ({ src, title, description, isComingSoon }) => {
 
   return (
     <div className="relative size-full">
-      <video
-        src={src}
-        loop
-        muted
-        autoPlay
-        className="absolute left-0 top-0 size-full object-cover object-center"
-      />
+      {src && (
+        <video
+          src={src}
+          loop
+          muted
+          autoPlay
+          className="absolute left-0 top-0 size-full object-cover object-center"
+        />
+      )}
+      {bgColor && (
+        <div className={`absolute left-0 top-0 size-full ${bgColor}`} />
+      )}
       <div className="relative z-10 flex size-full flex-col justify-between p-5 text-blue-50">
         <div>
           <h1 className="bento-title special-font">{title}</h1>
@@ -90,7 +135,7 @@ export const BentoCard = ({ src, title, description, isComingSoon }) => {
               }}
             />
             <TiLocationArrow className="relative z-20" />
-            <p className="relative z-20">coming soon</p>
+            <p className="relative z-20">explore now</p>
           </div>
         )}
       </div>
@@ -99,28 +144,41 @@ export const BentoCard = ({ src, title, description, isComingSoon }) => {
 };
 
 const Features = () => (
+
+  
+
+  
   <section className="bg-black pb-52">
     <div className="container mx-auto px-3 md:px-10">
       <div className="px-5 py-32">
         <p className="font-circular-web text-lg text-blue-50">
-          Into the Metagame Layer
+          From Vision to Reality
         </p>
-        <p className="max-w-md font-circular-web text-lg text-blue-50 opacity-50">
-          Immerse yourself in a rich and ever-expanding universe where a vibrant
-          array of products converge into an interconnected overlay experience
-          on your world.
+        <p className="max-w-md font-circular-web text-lg text-blue-50 opacity-50 ">
+          DRV Studios - Your complete visual production partner. Established in 2021, we specialize in bringing your creative vision to life through cinematic excellence and innovative storytelling.
+          
         </p>
+         {/* <AnimatedTitle
+          // title="Disc<b>o</b>ver the world's <br /> largest shared <b>a</b>dventure"
+          title="DRV Features"
+
+          containerClass="mt-5  !text-white tracking-wider text-center"
+        /> */}
+        
       </div>
 
-      <BentoTilt className="border-hsla relative mb-7 h-96 w-full overflow-hidden rounded-md md:h-[65vh]">
+      <BentoTilt className="border-hsla relative mb-7 h-96 w-full overflow-hidden rounded-md md:h-[60vh]">
         <BentoCard
-          src="videos/feature-1.mp4"
+          bgColor="bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-800"
           title={
             <>
-              radia<b>n</b>t
+              Dire<b>ct</b>ors
+              
+              {/* <ThreeDMarquee images={Images} /> */}
+              {/* <AnimatedTitle/> */}
             </>
           }
-          description="A cross-platform metagame app, turning your activities across Web2 and Web3 games into a rewarding adventure."
+          description="Your premier visual production house for music videos, films, web series, and branded YouTube content. Creating compelling cinematic experiences since 2021."
           isComingSoon
         />
       </BentoTilt>
@@ -128,61 +186,71 @@ const Features = () => (
       <div className="grid h-[135vh] w-full grid-cols-2 grid-rows-3 gap-7">
         <BentoTilt className="bento-tilt_1 row-span-1 md:col-span-1 md:row-span-2">
           <BentoCard
-            src="videos/feature-2.mp4"
+            bgColor="bg-gradient-to-br from-red-900 via-pink-800 to-purple-700"
             title={
               <>
-                zig<b>m</b>a
+                DRV Ev<b>e</b>nts
               </>
             }
-            description="An anime and gaming-inspired NFT collection - the IP primed for expansion."
+            description="Capturing life's precious moments - Pre-wedding shoots, Weddings, Corporate Events, Fashion Shoots, Concerts and more."
             isComingSoon
           />
         </BentoTilt>
 
         <BentoTilt className="bento-tilt_1 row-span-1 ms-32 md:col-span-1 md:ms-0">
           <BentoCard
-            src="videos/feature-3.mp4"
+            bgColor="bg-gradient-to-br from-green-800 via-emerald-700 to-teal-600"
             title={
               <>
-                n<b>e</b>xus
+                DRV S<b>o</b>cials
               </>
             }
-            description="A gamified social hub, adding a new dimension of play to social interaction for Web3 communities."
+            description="Complete social media solutions - Management, Paid Ads, Content Creation, Influencer Marketing, and Brand Development."
             isComingSoon
           />
         </BentoTilt>
 
         <BentoTilt className="bento-tilt_1 me-14 md:col-span-1 md:me-0">
           <BentoCard
-            src="videos/feature-4.mp4"
+            bgColor="bg-gradient-to-br from-orange-800 via-red-700 to-pink-600"
             title={
               <>
-                az<b>u</b>l
+                Pr<b>o</b>ductions
               </>
             }
-            description="A cross-world AI Agent - elevating your gameplay to be more fun and productive."
+            description="Full-scale production services - Music Videos, Short Films, Movies, Web Series, and YouTube Content Creation."
             isComingSoon
           />
         </BentoTilt>
 
         <BentoTilt className="bento-tilt_2">
-          <div className="flex size-full flex-col justify-between bg-violet-300 p-5">
+          <div className="features-card flex size-full flex-col justify-between bg-gradient-to-br from-yellow-400 via-orange-400 to-red-400 p-5">
             <h1 className="bento-title special-font max-w-64 text-black">
-              M<b>o</b>re co<b>m</b>ing s<b>o</b>on.
+              Est<b>a</b>blished <b>2</b>021
             </h1>
-
-            <TiLocationArrow className="m-5 scale-[5] self-end" />
+            <p className="features-card-desc text-black/80 text-sm mt-2">
+              Years of creative excellence and innovative storytelling
+            </p>
+            <TiLocationArrow className="features-card-arrow m-5 scale-[5] self-end text-black" />
           </div>
         </BentoTilt>
 
+        {/* <BentoTilt className="bento-tilt_2">
+          <div className="flex size-full flex-col justify-between bg-gradient-to-br from-yellow-200 via-yellow-400 to-yellow-600 p-5">
+            <TiLocationArrow className="m-5 scale-[5] self-end text-black" />
+          </div>
+        </BentoTilt> */}
+
         <BentoTilt className="bento-tilt_2">
-          <video
-            src="videos/feature-5.mp4"
-            loop
-            muted
-            autoPlay
-            className="size-full object-cover object-center"
-          />
+          <div className="flex size-full flex-col justify-between bg-gradient-to-br from-cyan-600 via-blue-600 to-indigo-600 p-5">
+            <h1 className="bento-title special-font max-w-64 text-white">
+              Ab<b>o</b>ut <b>U</b>s
+            </h1>
+            <p className="text-white/80 text-sm mt-2">
+              Meet our creative directors and learn about our journey in visual storytelling
+            </p>
+            <TiLocationArrow className="m-5 scale-[3] self-end text-white" />
+          </div>
         </BentoTilt>
       </div>
     </div>
