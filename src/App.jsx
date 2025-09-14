@@ -72,7 +72,7 @@ function App() {
                <ScrollCarousel />
                <Testimonials/>
                {/* <MatterLogoContainer/> */}
-                {/* <Contact /> */}
+                { <Contact /> }
               </>
             }
           />
@@ -87,7 +87,7 @@ function App() {
   }
 />
 
-          {/* <Route path="/contact" element={<ContactUs />} /> */}
+          {<Route path="/contact" element={<ContactUs />} />}
           {/* <Route path="/aboutus" element={<AboutUs />} /> */}
         </Routes>
         <Footer />
