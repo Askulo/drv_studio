@@ -271,3 +271,118 @@ body {
     opacity: 0.8;
   }
 }
+
+
+/* Contact icon at the bottom right */
+.contact-icon {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #007bff;
+  color: white;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 24px;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1000; /* Ensure it's on top of other content */
+}
+
+/* Overlay for the popup */
+.contact-popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1001;
+}
+
+/* Content box for the popup */
+.contact-popup-content {
+  background-color: white;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  position: relative;
+  max-width: 400px;
+  width: 90%;
+}
+
+/* Close button inside the popup */
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #888;
+}
+
+.close-button:hover {
+  color: #333;
+}
+
+
+.south-side-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  width: 100%;
+  height: 100vh; /* Adjust height as needed */
+  background-color: #1a1a1a;
+  color: #fff;
+  border: 4px solid #fff;
+}
+
+.grid-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border: 2px solid #fff; /* Border between sections */
+}
+
+.text-item {
+  padding: 2rem;
+  font-family: 'Impact', sans-serif; /* A bold, condensed font like Impact is a good substitute */
+  font-size: 8vw; /* Responsive font size */
+}
+
+.main-text {
+  margin: 0;
+  white-space: nowrap;
+  letter-spacing: 0.5vw;
+}
+
+.image-item {
+  position: relative;
+}
+
+.image-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Reveal effect styles */
+.reveal-image {
+  transform: scale(1.1);
+  opacity: 0;
+  transition: transform 0.8s ease-out, opacity 0.8s ease-out;
+}
+
+.reveal-image.is-visible {
+  transform: scale(1);
+  opacity: 1;
+}

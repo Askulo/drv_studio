@@ -12,12 +12,14 @@ gsap.registerPlugin(ScrollTrigger);
 const Hero = () => {
   const [currentIndex, setCurrentIndex] = useState(1);
   const [hasClicked, setHasClicked] = useState(false);
+  const [isAutoPlay, setIsAutoPlay] = useState(true);
 
   const [loading, setLoading] = useState(true);
   const [loadedVideos, setLoadedVideos] = useState(0);
 
-  const totalVideos = 4;
+  const totalVideos = 3; // Change from 4 to 3 if you only have 3 videos
   const nextVdRef = useRef(null);
+  const autoSwitchIntervalRef = useRef(null);
 
   const handleVideoLoad = () => {
     setLoadedVideos((prev) => prev + 1);
@@ -29,11 +31,45 @@ const Hero = () => {
     }
   }, [loadedVideos]);
 
-  const handleMiniVdClick = () => {
-    setHasClicked(true);
+  // Auto-switch videos every 2 seconds
+  useEffect(() => {
+    if (isAutoPlay && !loading) {
+      autoSwitchIntervalRef.current = setInterval(() => {
+        setHasClicked(true);
+        setCurrentIndex((prevIndex) => (prevIndex % totalVideos) + 1);
+      }, 5000); // 5 seconds
+    }
 
+    return () => {
+      if (autoSwitchIntervalRef.current) {
+        clearInterval(autoSwitchIntervalRef.current);
+      }
+    };
+  }, [isAutoPlay, loading, totalVideos]);
+
+  const handleMiniVdClick = () => {
+    // Pause auto-play when user manually clicks
+    setIsAutoPlay(false);
+    if (autoSwitchIntervalRef.current) {
+      clearInterval(autoSwitchIntervalRef.current);
+    }
+    
+    setHasClicked(true);
     setCurrentIndex((prevIndex) => (prevIndex % totalVideos) + 1);
   };
+
+  // Resume auto-play after 5 seconds of no interaction
+  const resumeAutoPlay = () => {
+    setTimeout(() => {
+      setIsAutoPlay(true);
+    }, 5000);
+  };
+
+  useEffect(() => {
+    if (!isAutoPlay) {
+      resumeAutoPlay();
+    }
+  }, [isAutoPlay]);
 
   useGSAP(
     () => {
@@ -47,6 +83,10 @@ const Hero = () => {
           duration: 1,
           ease: "power1.inOut",
           onStart: () => nextVdRef.current.play(),
+          onComplete: () => {
+            // Reset hasClicked after animation completes
+            setHasClicked(false);
+          }
         });
         gsap.from("#current-video", {
           transformOrigin: "center center",
@@ -83,7 +123,7 @@ const Hero = () => {
   const getVideoSrc = (index) => `videos/hero-${index}.mp4`;
 
   return (
-    <div className="relative h-dvh w-screen overflow-x-hidden">
+    <div id="home" className="relative h-dvh w-screen overflow-x-hidden">
       {loading && (
         <div className="flex-center absolute z-[100] h-dvh w-screen overflow-hidden bg-violet-50">
           {/* https://uiverse.io/G4b413l/tidy-walrus-92 */}
@@ -129,9 +169,7 @@ const Hero = () => {
             onLoadedData={handleVideoLoad}
           />
           <video
-            src={getVideoSrc(
-              currentIndex === totalVideos - 1 ? 1 : currentIndex
-            )}
+            src={getVideoSrc(currentIndex)}
             autoPlay
             loop
             muted
@@ -139,6 +177,8 @@ const Hero = () => {
             onLoadedData={handleVideoLoad}
           />
         </div>
+
+      
 
         <h1 className="special-font hero-heading absolute bottom-5 right-5 z-40 text-blue-75">
           FR<b>A</b>ME
@@ -156,18 +196,18 @@ const Hero = () => {
               films to web series and beyond.
             </p>
 
-            <Button
+            {/* <Button
               id="watch-trailer"
               title="BOOK YOUR SLOT"
               leftIcon={<TiLocationArrow />}
               containerClass="bg-yellow-300 flex-center gap-1"
-            />
+            /> */}
           </div>
         </div>
       </div>
 
       <h1 className="special-font hero-heading absolute bottom-5 right-5 text-black">
-        G<b>A</b>MING
+        FIL<b>M</b>ING
       </h1>
     </div>
   );

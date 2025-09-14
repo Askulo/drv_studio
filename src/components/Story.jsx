@@ -92,18 +92,27 @@ const FloatingImage = () => {
   };
 
   return (
-    <div id="story" className="min-h-dvh w-screen bg-gradient-to-br from-black via-gray-900 to-purple-950 text-blue-50 relative overflow-hidden">
+    <div
+
+      className="min-h-dvh w-screen bg-gradient-to-br from-black via-gray-900 to-purple-950 text-blue-50 relative overflow-hidden"
+    >
       {/* Animated background elements */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-20 left-20 w-32 h-32 bg-blue-500/10 rounded-full blur-3xl bg-pulse" />
-        <div className="absolute bottom-40 right-32 w-48 h-48 bg-purple-500/10 rounded-full blur-3xl bg-pulse" style={{ animationDelay: '1s' }} />
-        <div className="absolute top-1/2 left-1/4 w-24 h-24 bg-cyan-400/15 rounded-full blur-2xl bg-pulse" style={{ animationDelay: '2s' }} />
-        
+        <div
+          className="absolute bottom-40 right-32 w-48 h-48 bg-purple-500/10 rounded-full blur-3xl bg-pulse"
+          style={{ animationDelay: "1s" }}
+        />
+        <div
+          className="absolute top-1/2 left-1/4 w-24 h-24 bg-cyan-400/15 rounded-full blur-2xl bg-pulse"
+          style={{ animationDelay: "2s" }}
+        />
+
         {/* Floating particles */}
         {[...Array(15)].map((_, i) => (
           <div
             key={i}
-            ref={el => particlesRef.current[i] = el}
+            ref={(el) => (particlesRef.current[i] = el)}
             className="absolute w-1 h-1 bg-blue-400/60 rounded-full"
             style={{
               left: `${Math.random() * 100}%`,
@@ -113,30 +122,34 @@ const FloatingImage = () => {
         ))}
       </div>
 
-      {/* Grid overlay */}
-      <div 
+      {/* /* Grid overlay */}
+      <div
         className="absolute inset-0 opacity-[0.03]"
         style={{
           backgroundImage: `
-            linear-gradient(rgba(59, 130, 246, 0.3) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(59, 130, 246, 0.3) 1px, transparent 1px)
-          `,
-          backgroundSize: '60px 60px'
+          linear-gradient(rgba(59, 130, 246, 0.3) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(59, 130, 246, 0.3) 1px, transparent 1px)
+            `,
+          backgroundSize: "60px 60px",
         }}
       />
 
       <div className="flex size-full flex-col items-center py-10 pb-24 relative z-10">
         <div className="relative mb-8">
-          <p className="font-general text-sm uppercase md:text-[10px] tracking-[0.3em] text-blue-400 relative">
-            <span className="relative z-10">the multiversal ip world</span>
+          <div className="relative">
+            <p className="font-general text-sm uppercase md:text-[10px] tracking-[0.3em] text-blue-400 relative">
+              <span className="relative z-10">
+                a world where realms converge
+              </span>
+            </p>
             <div className="absolute inset-0 bg-blue-400/20 blur-xl scale-150" />
-          </p>
+          </div>
         </div>
 
         <div className="relative size-full" ref={containerRef}>
           <div className="relative">
             <AnimatedTitle
-              title="the st<b>o</b>ry of <br /> a hidden real<b>m</b>"
+              title="the st<b>o</b>ry we <br /> crea<b>t</b>e together"
               containerClass="mt-5 pointer-events-none mix-blend-difference relative z-10 drop-shadow-2xl"
             />
             <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-cyan-500/10 blur-3xl scale-110 opacity-50" />
@@ -146,7 +159,7 @@ const FloatingImage = () => {
             {/* Enhanced glow effects around image */}
             <div className="absolute inset-0 bg-gradient-radial from-blue-500/20 via-purple-500/10 to-transparent blur-3xl scale-110" />
             <div className="absolute inset-0 bg-gradient-to-t from-cyan-500/20 to-transparent blur-2xl" />
-            
+
             <div className="story-img-mask relative overflow-hidden rounded-3xl shadow-2xl shadow-blue-500/25 border border-blue-500/20">
               <div className="story-img-content relative group">
                 <img
@@ -155,15 +168,15 @@ const FloatingImage = () => {
                   onMouseLeave={handleMouseLeave}
                   onMouseUp={handleMouseLeave}
                   onMouseEnter={handleMouseLeave}
-                  src="/img/entrance.webp"
+                  src="/img/services.webp"
                   alt="entrance.webp"
                   className="object-contain transition-all duration-500 filter brightness-110 contrast-105 group-hover:brightness-125"
                 />
-                
+
                 {/* Image overlay effects */}
                 <div className="absolute inset-0 bg-gradient-to-tr from-blue-500/10 via-transparent to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                 <div className="absolute inset-0 bg-gradient-to-bl from-cyan-400/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-                
+
                 {/* Shimmer effect */}
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out opacity-0 group-hover:opacity-100" />
               </div>
@@ -200,10 +213,10 @@ const FloatingImage = () => {
                   />
                 </filter>
                 <filter id="glow">
-                  <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
-                  <feMerge> 
-                    <feMergeNode in="coloredBlur"/>
-                    <feMergeNode in="SourceGraphic"/>
+                  <feGaussianBlur stdDeviation="4" result="coloredBlur" />
+                  <feMerge>
+                    <feMergeNode in="coloredBlur" />
+                    <feMergeNode in="SourceGraphic" />
                   </feMerge>
                 </filter>
               </defs>
@@ -216,11 +229,10 @@ const FloatingImage = () => {
             {/* Enhanced content container */}
             <div className="relative backdrop-blur-sm bg-black/20 p-6 rounded-2xl border border-blue-500/20 shadow-2xl">
               <p className="mt-3 max-w-sm text-center font-circular-web text-violet-50 md:text-start leading-relaxed relative z-10">
-                Where realms converge, lies Zentry and the boundless pillar.
-                Discover its secrets and shape your fate amidst infinite
-                opportunities.
+                Within DRV Studios, imagination meets reality. Unveil hidden
+                stories and step into realms where creativity knows no bounds.
               </p>
-              
+
               {/* Text glow effect */}
               <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 via-purple-500/5 to-cyan-500/5 rounded-2xl blur-xl" />
             </div>
@@ -228,7 +240,7 @@ const FloatingImage = () => {
             <div className="relative group mt-5">
               <Button
                 id="realm-btn"
-                title="discover prologue"
+                title="discover more"
                 containerClass="mt-5 transform hover:scale-105 transition-all duration-300 hover:shadow-2xl hover:shadow-purple-500/25"
               />
               <div className="absolute inset-0 bg-gradient-to-r from-purple-500/20 to-blue-500/20 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 scale-150" />

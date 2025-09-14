@@ -22,8 +22,8 @@ export default function Footer() {
 
             <div className="mt-8 pt-6 border-t border-gray-700">
               <div className="flex flex-wrap gap-4 text-sm">
-                <a href="https://www.drvstudios.com" className="hover:text-blue-500 transition-colors">
-                  HOME
+                <a href="/https://www.events.drvstudios.com" className="hover:text-blue-500 transition-colors">
+                  DRV STUDIOS
                 </a>
                 <a href="https://www.events.drvstudios.com" className="hover:text-blue-500 transition-colors">
                   DRV EVENTS
@@ -98,8 +98,9 @@ export default function Footer() {
             <a href="#" className="hover:text-blue-500 transition-colors">
               FAQ
             </a>
-            <span>DRV 2025 ©</span>
+            <span>©2025- DRV Studios. <br/> All rights reserved. </span>
           </div>
+          <span>Designed and Maintained by Codeflare Labs</span>
         </div>
       </div>
     </footer>
