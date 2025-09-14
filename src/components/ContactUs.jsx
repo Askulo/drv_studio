@@ -11,46 +11,135 @@ import {
 } from "lucide-react";
 
 const ContactUs = () => {
+  const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
-    name: "",
+    firstName: "",
+    lastName: "",
     email: "",
-    subject: "",
+    phone: "",
+    companyName: "",
+    projectType: "",
+    budget: "",
+    deadline: "",
     message: "",
   });
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [focusedField, setFocusedField] = useState(null);
+  const [errors, setErrors] = useState({});
 
-  const handleInputChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+  const validateEmail = (email) => {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(email);
   };
 
-  const handleSubmit = () => {
-    setIsSubmitted(true);
-    setTimeout(() => setIsSubmitted(false), 3000);
-    setFormData({ name: "", email: "", subject: "", message: "" });
+  const validatePhone = (phone) => {
+    if (!phone) return true; // Phone is optional
+    const re = /^[0-9]{10}$/;
+    return re.test(phone.replace(/[^0-9]/g, ''));
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+
+    // Clear error when user starts typing
+    if (errors[name]) {
+      setErrors({
+        ...errors,
+        [name]: '',
+      });
+    }
+  };
+
+  const handleSubmit = async () => {
+    // Validate form
+    const newErrors = {};
+    
+    if (!formData.firstName.trim()) {
+      newErrors.firstName = 'First name is required';
+    }
+    
+    if (!formData.lastName.trim()) {
+      newErrors.lastName = 'Last name is required';
+    }
+    
+    if (!formData.email.trim()) {
+      newErrors.email = 'Email is required';
+    } else if (!validateEmail(formData.email)) {
+      newErrors.email = 'Please enter a valid email address';
+    }
+    
+    if (formData.phone && !validatePhone(formData.phone)) {
+      newErrors.phone = 'Please enter a valid 10-digit phone number';
+    }
+    
+    if (!formData.projectType) {
+      newErrors.projectType = 'Please select a project type';
+    }
+    
+    if (!formData.message.trim()) {
+      newErrors.message = 'Please describe your project';
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
+    // Clear errors and submit form
+    setErrors({});
+    setIsLoading(true);
+
+    try {
+      // Simulate API call - Replace with your actual API endpoint
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
+      setIsSubmitted(true);
+      setTimeout(() => setIsSubmitted(false), 5000);
+      setFormData({
+        firstName: "",
+        lastName: "",
+        email: "",
+        phone: "",
+        companyName: "",
+        projectType: "",
+        budget: "",
+        deadline: "",
+        message: "",
+      });
+    } catch (error) {
+      setErrors({
+        submit: "Something went wrong. Please try again later."
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const contactInfo = [
     {
       icon: Mail,
-      title: "Email",
+      title: "Email Us",
       info: "contact@drvstudios.com",
-      description: "Send us your project ideas anytime",
+      description: "24/7 email support for all inquiries",
+      availability: "Response within 24 hours",
     },
     {
       icon: Phone,
-      title: "Phone",
-      info: "8479933012",
-      description: "Call us for immediate assistance",
+      title: "Call Us",
+      info: "+91 847-993-3012",
+      description: "Professional video production services",
+      availability: "Mon-Sat: 10 AM - 7 PM IST",
     },
     {
       icon: MapPin,
-      title: "Studio",
+      title: "Visit Our Studio",
       info: "Thakurpukur, Kolkata",
-      description: "West Bengal, India",
+      description: "West Bengal, India - 700063",
+      availability: "By appointment only",
     },
   ];
 
@@ -92,7 +181,7 @@ const ContactUs = () => {
   };
 
   return (
-    <div className="h-screen mt-20 bg-gradient-to-br from-gray-900 via-black to-blue-900 text-white overflow-hidden">
+    <div className="min-h-screen mt-20 bg-gradient-to-br from-gray-900 via-black to-blue-900 text-white">
       {/* Background Pattern */}
       <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-black to-gray-800">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.1),transparent_50%)]" />
@@ -105,55 +194,283 @@ const ContactUs = () => {
         animate="visible"
       >
         {/* Header */}
-        <motion.div className="text-center mb-12" variants={itemVariants}>
+        <motion.div className="mb-12" variants={itemVariants}>
           <motion.h1
-            className="text-4xl md:text-5xl font-light mb-12 leading-tight"
+            className="text-4xl md:text-5xl font-light mb-8 leading-tight"
             whileHover={{ scale: 1.02 }}
             transition={{ type: "spring", stiffness: 400, damping: 10 }}
           >
             Partner With Us To Tell Your Story
           </motion.h1>
+          <p className="text-gray-400 text-lg max-w-2xl">
+            Turn your vision into reality with DRV Studios. We're here to create stunning visual content that makes your brand stand out.
+          </p>
         </motion.div>
 
-        {/* Contact Form - Centered */}
-        <motion.div variants={formVariants} className="max-w-2xl mx-auto">
-          <div className="border-t border-gray-700 pt-8">
-            <h3 className="text-lg font-light mb-6">Start Your Project</h3>
+        {/* Main Content Container */}
+        <div className="flex flex-col lg:flex-row gap-12 max-w-7xl mx-auto">
+          {/* Contact Information - Left Side */}
+          <motion.div 
+            className="lg:w-1/3"
+            variants={containerVariants}
+          >
+            <div className="bg-gray-900/30 backdrop-blur-sm p-8 rounded-xl border border-gray-800 sticky top-24">
+              <h3 className="text-xl font-light mb-8 text-blue-400">Get in Touch</h3>
+              <div className="space-y-8">
+                {contactInfo.map((item, index) => (
+                  <motion.div
+                    key={index}
+                    className="border-b border-gray-800 pb-6 last:border-0 last:pb-0"
+                    variants={itemVariants}
+                    whileHover={{ scale: 1.02 }}
+                  >
+                    <div className="flex items-center mb-4">
+                      <div className="p-2 bg-blue-900/30 rounded-lg">
+                        <item.icon className="w-5 h-5 text-blue-400" />
+                      </div>
+                      <h4 className="text-base font-light ml-3">{item.title}</h4>
+                    </div>
+                    <p className="text-base text-white mb-1">{item.info}</p>
+                    <p className="text-sm text-gray-400 mb-1">{item.description}</p>
+                    <p className="text-xs text-blue-400">{item.availability}</p>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          </motion.div>
 
-            <AnimatePresence>
-              {isSubmitted && (
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.8 }}
-                  className="mb-4 p-3 bg-green-900 border border-green-700 rounded-lg flex items-center space-x-2 text-green-300 text-sm"
-                >
-                  <CheckCircle className="w-4 h-4" />
-                  <span>Project submitted successfully!</span>
-                </motion.div>
-              )}
-            </AnimatePresence>
+          {/* Contact Form - Right Side */}
+          <motion.div className="lg:w-2/3" variants={formVariants}>
+            <div className="bg-gray-900/30 backdrop-blur-sm p-8 rounded-xl border border-gray-800">
+              <h3 className="text-xl font-light mb-8 text-blue-400">Start Your Project</h3>
 
-            <div className="space-y-6">
-              <div className="grid grid-cols-2 gap-6">
+              <AnimatePresence>
+                {isSubmitted && (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.8 }}
+                    className="mb-4 p-3 bg-green-900 border border-green-700 rounded-lg flex items-center space-x-2 text-green-300 text-sm"
+                  >
+                    <CheckCircle className="w-4 h-4" />
+                    <span>Thank you for your interest! Our team will contact you within 24-48 hours.</span>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              <div className="space-y-6">
+                <p className="text-sm text-gray-400 mb-6">Fields marked with * are required</p>
+
+                {/* Personal Information */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <motion.div
+                    whileFocus={{ scale: 1.02 }}
+                    transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                  >
+                    <motion.input
+                      type="text"
+                      name="firstName"
+                      value={formData.firstName}
+                      onChange={handleInputChange}
+                      onFocus={() => setFocusedField("firstName")}
+                      onBlur={() => setFocusedField(null)}
+                      className="w-full px-0 py-3 text-sm bg-transparent border-0 border-b border-gray-600 focus:border-white outline-none transition-all duration-300 font-light"
+                      placeholder="First Name*"
+                      animate={{
+                        borderColor: errors.firstName
+                          ? "#ef4444"
+                          : focusedField === "firstName"
+                          ? "#ffffff"
+                          : "#4B5563",
+                      }}
+                      required
+                    />
+                    {errors.firstName && (
+                      <span className="text-red-400 text-xs mt-1">{errors.firstName}</span>
+                    )}
+                  </motion.div>
+
+                  <motion.div
+                    whileFocus={{ scale: 1.02 }}
+                    transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                  >
+                    <motion.input
+                      type="text"
+                      name="lastName"
+                      value={formData.lastName}
+                      onChange={handleInputChange}
+                      onFocus={() => setFocusedField("lastName")}
+                      onBlur={() => setFocusedField(null)}
+                      className="w-full px-0 py-3 text-sm bg-transparent border-0 border-b border-gray-600 focus:border-white outline-none transition-all duration-300 font-light"
+                      placeholder="Last Name*"
+                      animate={{
+                        borderColor: errors.lastName
+                          ? "#ef4444"
+                          : focusedField === "lastName"
+                          ? "#ffffff"
+                          : "#4B5563",
+                      }}
+                      required
+                    />
+                    {errors.lastName && (
+                      <span className="text-red-400 text-xs mt-1">{errors.lastName}</span>
+                    )}
+                  </motion.div>
+                </div>
+
+                {/* Contact Information */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <motion.div
+                    whileFocus={{ scale: 1.02 }}
+                    transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                  >
+                    <motion.input
+                      type="email"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleInputChange}
+                      onFocus={() => setFocusedField("email")}
+                      onBlur={() => setFocusedField(null)}
+                      className="w-full px-0 py-3 text-sm bg-transparent border-0 border-b border-gray-600 focus:border-white outline-none transition-all duration-300 font-light"
+                      placeholder="Business Email*"
+                      animate={{
+                        borderColor: errors.email
+                          ? "#ef4444"
+                          : focusedField === "email"
+                          ? "#ffffff"
+                          : "#4B5563",
+                      }}
+                      required
+                    />
+                    {errors.email && (
+                      <span className="text-red-400 text-xs mt-1">{errors.email}</span>
+                    )}
+                  </motion.div>
+
+                  <motion.div
+                    whileFocus={{ scale: 1.02 }}
+                    transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                  >
+                    <motion.input
+                      type="tel"
+                      name="phone"
+                      value={formData.phone}
+                      onChange={handleInputChange}
+                      onFocus={() => setFocusedField("phone")}
+                      onBlur={() => setFocusedField(null)}
+                      className="w-full px-0 py-3 text-sm bg-transparent border-0 border-b border-gray-600 focus:border-white outline-none transition-all duration-300 font-light"
+                      placeholder="Phone Number"
+                      animate={{
+                        borderColor: errors.phone
+                          ? "#ef4444"
+                          : focusedField === "phone"
+                          ? "#ffffff"
+                          : "#4B5563",
+                      }}
+                    />
+                    {errors.phone && (
+                      <span className="text-red-400 text-xs mt-1">{errors.phone}</span>
+                    )}
+                  </motion.div>
+                </div>
+
+                {/* Company Information */}
                 <motion.div
                   whileFocus={{ scale: 1.02 }}
                   transition={{ type: "spring", stiffness: 400, damping: 10 }}
                 >
                   <motion.input
                     type="text"
-                    name="name"
-                    value={formData.name}
+                    name="companyName"
+                    value={formData.companyName}
                     onChange={handleInputChange}
-                    onFocus={() => setFocusedField("name")}
+                    onFocus={() => setFocusedField("companyName")}
                     onBlur={() => setFocusedField(null)}
                     className="w-full px-0 py-3 text-sm bg-transparent border-0 border-b border-gray-600 focus:border-white outline-none transition-all duration-300 font-light"
-                    placeholder="Your name"
+                    placeholder="Company Name"
                     animate={{
                       borderColor:
-                        focusedField === "name" ? "#ffffff" : "#4B5563",
+                        focusedField === "companyName" ? "#ffffff" : "#4B5563",
                     }}
-                    required
+                  />
+                </motion.div>
+
+                {/* Project Details */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <motion.div
+                    whileFocus={{ scale: 1.02 }}
+                    transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                  >
+                    <motion.select
+                      name="projectType"
+                      value={formData.projectType}
+                      onChange={handleInputChange}
+                      onFocus={() => setFocusedField("projectType")}
+                      onBlur={() => setFocusedField(null)}
+                      className="w-full px-0 py-3 text-sm bg-transparent border-0 border-b border-gray-600 focus:border-white outline-none transition-all duration-300 font-light"
+                      animate={{
+                        borderColor: errors.projectType
+                          ? "#ef4444"
+                          : focusedField === "projectType"
+                          ? "#ffffff"
+                          : "#4B5563",
+                      }}
+                      required
+                    >
+                      <option value="" className="bg-gray-900">Select Project Type*</option>
+                      <option value="video-production" className="bg-gray-900">Video Production</option>
+                      <option value="photography" className="bg-gray-900">Photography</option>
+                      <option value="motion-graphics" className="bg-gray-900">Motion Graphics</option>
+                      <option value="event-coverage" className="bg-gray-900">Event Coverage</option>
+                      <option value="other" className="bg-gray-900">Other</option>
+                    </motion.select>
+                    {errors.projectType && (
+                      <span className="text-red-400 text-xs mt-1">{errors.projectType}</span>
+                    )}
+                  </motion.div>
+
+                  <motion.div
+                    whileFocus={{ scale: 1.02 }}
+                    transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                  >
+                    <motion.select
+                      name="budget"
+                      value={formData.budget}
+                      onChange={handleInputChange}
+                      onFocus={() => setFocusedField("budget")}
+                      onBlur={() => setFocusedField(null)}
+                      className="w-full px-0 py-3 text-sm bg-transparent border-0 border-b border-gray-600 focus:border-white outline-none transition-all duration-300 font-light"
+                      animate={{
+                        borderColor:
+                          focusedField === "budget" ? "#ffffff" : "#4B5563",
+                      }}
+                    >
+                      <option value="" className="bg-gray-900">Budget Range</option>
+                      <option value="under-5k" className="bg-gray-900">Under ₹5,000</option>
+                      <option value="5k-15k" className="bg-gray-900">₹5,000 - ₹15,000</option>
+                      <option value="15k-30k" className="bg-gray-900">₹15,000 - ₹30,000</option>
+                      <option value="30k-plus" className="bg-gray-900">₹30,000+</option>
+                    </motion.select>
+                  </motion.div>
+                </div>
+
+                <motion.div
+                  whileFocus={{ scale: 1.02 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                >
+                  <motion.input
+                    type="date"
+                    name="deadline"
+                    value={formData.deadline}
+                    onChange={handleInputChange}
+                    onFocus={() => setFocusedField("deadline")}
+                    onBlur={() => setFocusedField(null)}
+                    className="w-full px-0 py-3 text-sm bg-transparent border-0 border-b border-gray-600 focus:border-white outline-none transition-all duration-300 font-light [color-scheme:dark]"
+                    placeholder="Project Deadline"
+                    animate={{
+                      borderColor:
+                        focusedField === "deadline" ? "#ffffff" : "#4B5563",
+                    }}
                   />
                 </motion.div>
 
@@ -161,79 +478,71 @@ const ContactUs = () => {
                   whileFocus={{ scale: 1.02 }}
                   transition={{ type: "spring", stiffness: 400, damping: 10 }}
                 >
-                  <motion.input
-                    type="email"
-                    name="email"
-                    value={formData.email}
+                  <motion.textarea
+                    name="message"
+                    value={formData.message}
                     onChange={handleInputChange}
-                    onFocus={() => setFocusedField("email")}
+                    onFocus={() => setFocusedField("message")}
                     onBlur={() => setFocusedField(null)}
-                    className="w-full px-0 py-3 text-sm bg-transparent border-0 border-b border-gray-600 focus:border-white outline-none transition-all duration-300 font-light"
-                    placeholder="your@email.com"
+                    rows={4}
+                    className="w-full px-0 py-3 text-sm bg-transparent border-0 border-b border-gray-600 focus:border-white outline-none resize-none transition-all duration-300 font-light"
+                    placeholder="Tell us about your vision..."
                     animate={{
-                      borderColor:
-                        focusedField === "email" ? "#ffffff" : "#4B5563",
+                      borderColor: errors.message
+                        ? "#ef4444"
+                        : focusedField === "message"
+                        ? "#ffffff"
+                        : "#4B5563",
                     }}
                     required
                   />
+                  {errors.message && (
+                    <span className="text-red-400 text-xs mt-1">{errors.message}</span>
+                  )}
                 </motion.div>
+
+                {errors.submit && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    className="mb-4 p-3 bg-red-900/50 border border-red-700 rounded-lg text-red-300 text-sm"
+                  >
+                    {errors.submit}
+                  </motion.div>
+                )}
+
+                <motion.button
+                  onClick={handleSubmit}
+                  disabled={isLoading}
+                  className={`text-sm font-light tracking-wide border ${
+                    isLoading 
+                      ? 'border-gray-700 bg-gray-800/50 cursor-not-allowed' 
+                      : 'border-gray-600 hover:border-white'
+                  } px-8 py-3 transition-all duration-300 flex items-center space-x-2`}
+                  whileHover={{ scale: isLoading ? 1 : 1.02, borderColor: isLoading ? "" : "#ffffff" }}
+                  whileTap={{ scale: isLoading ? 1 : 0.98 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                >
+                  {isLoading ? (
+                    <>
+                      <svg className="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                      <span>SUBMITTING...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Send className="w-4 h-4" />
+                      <span>START PROJECT</span>
+                    </>
+                  )}
+                </motion.button>
               </div>
-
-              <motion.div
-                whileFocus={{ scale: 1.02 }}
-                transition={{ type: "spring", stiffness: 400, damping: 10 }}
-              >
-                <motion.input
-                  type="text"
-                  name="subject"
-                  value={formData.subject}
-                  onChange={handleInputChange}
-                  onFocus={() => setFocusedField("subject")}
-                  onBlur={() => setFocusedField(null)}
-                  className="w-full px-0 py-3 text-sm bg-transparent border-0 border-b border-gray-600 focus:border-white outline-none transition-all duration-300 font-light"
-                  placeholder="What type of project?"
-                  animate={{
-                    borderColor:
-                      focusedField === "subject" ? "#ffffff" : "#4B5563",
-                  }}
-                  required
-                />
-              </motion.div>
-
-              <motion.div
-                whileFocus={{ scale: 1.02 }}
-                transition={{ type: "spring", stiffness: 400, damping: 10 }}
-              >
-                <motion.textarea
-                  name="message"
-                  value={formData.message}
-                  onChange={handleInputChange}
-                  onFocus={() => setFocusedField("message")}
-                  onBlur={() => setFocusedField(null)}
-                  rows={4}
-                  className="w-full px-0 py-3 text-sm bg-transparent border-0 border-b border-gray-600 focus:border-white outline-none resize-none transition-all duration-300 font-light"
-                  placeholder="Tell us about your vision..."
-                  animate={{
-                    borderColor:
-                      focusedField === "message" ? "#ffffff" : "#4B5563",
-                  }}
-                  required
-                />
-              </motion.div>
-
-              <motion.button
-                onClick={handleSubmit}
-                className="text-sm font-light tracking-wide border border-gray-600 hover:border-white px-8 py-3 transition-all duration-300 flex items-center space-x-2"
-                whileHover={{ scale: 1.02, borderColor: "#ffffff" }}
-                whileTap={{ scale: 0.98 }}
-                transition={{ type: "spring", stiffness: 400, damping: 10 }}
-              >
-                <Send className="w-4 h-4" />
-                <span>START PROJECT</span>
-              </motion.button>
             </div>
-          </div>
-        </motion.div>
+          </motion.div>
+        </div>
       </motion.div>
     </div>
   );
