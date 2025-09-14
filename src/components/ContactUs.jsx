@@ -1,13 +1,13 @@
-import React, { useState } from "react";
+import  { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  Mail,
-  Phone,
-  MapPin,
+  // Mail,
+  // Phone,
+  // MapPin,
   Send,
   CheckCircle,
-  User,
-  MessageSquare,
+  // User,
+  // MessageSquare,
 } from "lucide-react";
 
 const ContactUs = () => {
@@ -33,26 +33,26 @@ const ContactUs = () => {
     setFormData({ name: "", email: "", subject: "", message: "" });
   };
 
-  const contactInfo = [
-    {
-      icon: Mail,
-      title: "Email",
-      info: "contact@drvstudios.com",
-      description: "Send us your project ideas anytime",
-    },
-    {
-      icon: Phone,
-      title: "Phone",
-      info: "8479933012",
-      description: "Call us for immediate assistance",
-    },
-    {
-      icon: MapPin,
-      title: "Studio",
-      info: "Thakurpukur, Kolkata",
-      description: "West Bengal, India",
-    },
-  ];
+  // const contactInfo = [
+  //   {
+  //     icon: Mail,
+  //     title: "Email",
+  //     info: "contact@drvstudios.com",
+  //     description: "Send us your project ideas anytime",
+  //   },
+  //   {
+  //     icon: Phone,
+  //     title: "Phone",
+  //     info: "8479933012",
+  //     description: "Call us for immediate assistance",
+  //   },
+  //   {
+  //     icon: MapPin,
+  //     title: "Studio",
+  //     info: "Thakurpukur, Kolkata",
+  //     description: "West Bengal, India",
+  //   },
+  // ];
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -147,7 +147,7 @@ const ContactUs = () => {
                     onChange={handleInputChange}
                     onFocus={() => setFocusedField("name")}
                     onBlur={() => setFocusedField(null)}
-                    className="w-full px-0 py-3 text-sm bg-transparent border-0 border-b border-gray-600 focus:border-white outline-none transition-all duration-300 font-light"
+                    className="w-full px-0 py-3 bg-transparent text-sm font-light border-0 border-b border-gray-600 focus:border-white outline-none transition-all duration-300"
                     placeholder="Your name"
                     animate={{
                       borderColor:

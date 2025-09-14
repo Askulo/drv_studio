@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import  { useState } from 'react';
 
 const PortfolioSection = () => {
   const [hoveredProject, setHoveredProject] = useState(null);
@@ -71,7 +71,7 @@ const PortfolioSection = () => {
 
         {/* Projects List */}
         <div className="space-y-0">
-          {projects.map((project, index) => (
+          {projects.map((project) => (
             <div
               key={project.id}
               className="group cursor-pointer border-b border-white/10 last:border-b-0"
