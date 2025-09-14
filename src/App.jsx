@@ -82,7 +82,7 @@ function App() {
     <>
       <Features />
       <PortfolioSection />
-        {/* <Contact /> */}
+        <ContactUs/>
     </>
   }
 />
