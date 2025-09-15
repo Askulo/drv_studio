@@ -8,6 +8,7 @@ import {
   CheckCircle,
   User,
   MessageSquare,
+  MessageCircle,
 } from "lucide-react";
 
 const ContactUs = () => {
@@ -141,6 +142,16 @@ const ContactUs = () => {
       description: "West Bengal, India - 700063",
       availability: "By appointment only",
     },
+    {
+      icon: MessageCircle,
+      title: "WhatsApp Us",
+      info: "+91 847-993-3012",
+      description: "Instant messaging support",
+      availability: "Available 24/7",
+      link: "https://wa.me/918479933012",
+      isClickable: true,
+      hoverText: "Click to chat on WhatsApp",
+    },
   ];
 
   const containerVariants = {
@@ -211,28 +222,54 @@ const ContactUs = () => {
         <div className="flex flex-col lg:flex-row gap-12 max-w-7xl mx-auto">
           {/* Contact Information - Left Side */}
           <motion.div 
-            className="lg:w-1/3"
+            className="lg:w-1/3 h-fit"
             variants={containerVariants}
           >
-            <div className="bg-gray-900/30 backdrop-blur-sm p-8 rounded-xl border border-gray-800 sticky top-24">
-              <h3 className="text-xl font-light mb-8 text-blue-400">Get in Touch</h3>
-              <div className="space-y-8">
+            <div className="bg-gray-900/30 backdrop-blur-sm p-6 rounded-xl border border-gray-800 sticky top-24">
+              <h3 className="text-base font-light mb-4 text-blue-400">Get in Touch</h3>
+              <div className="space-y-4 flex flex-col justify-between">
                 {contactInfo.map((item, index) => (
                   <motion.div
                     key={index}
-                    className="border-b border-gray-800 pb-6 last:border-0 last:pb-0"
+                    className={`border-b border-gray-800 pb-4 last:border-0 last:pb-0 ${
+                      item.isClickable ? 'cursor-pointer rounded-lg transition-all duration-300' : ''
+                    }`}
                     variants={itemVariants}
-                    whileHover={{ scale: 1.02 }}
+                    whileHover={{ 
+                      scale: 1.02,
+                      backgroundColor: item.isClickable ? 'rgba(34, 197, 94, 0.05)' : 'transparent'
+                    }}
+                    onClick={() => item.link && window.open(item.link, '_blank')}
+                    title={item.hoverText}
                   >
-                    <div className="flex items-center mb-4">
-                      <div className="p-2 bg-blue-900/30 rounded-lg">
-                        <item.icon className="w-5 h-5 text-blue-400" />
+                    <div className="flex items-start gap-3">
+                      <div className={`p-2 mt-1 ${
+                        item.title === "WhatsApp Us" 
+                          ? 'bg-green-900/30' 
+                          : 'bg-blue-900/30'
+                      } rounded-lg`}>
+                        <item.icon className={`w-4 h-4 ${
+                          item.title === "WhatsApp Us"
+                            ? 'text-green-400'
+                            : 'text-blue-400'
+                        }`} />
                       </div>
-                      <h4 className="text-base font-light ml-3">{item.title}</h4>
+                      <div className="flex-1">
+                        <h4 className="text-sm font-light mb-1">{item.title}</h4>
+                        <p className="text-sm text-white">
+                          {item.info}
+                          {item.isClickable && (
+                            <span className="ml-2 text-xs text-green-400">(Click to chat)</span>
+                          )}
+                        </p>
+                        <p className="text-xs text-gray-400 mt-0.5">{item.description}</p>
+                        <p className={`text-xs mt-0.5 ${
+                          item.title === "WhatsApp Us"
+                            ? 'text-green-400'
+                            : 'text-blue-400'
+                        }`}>{item.availability}</p>
+                      </div>
                     </div>
-                    <p className="text-base text-white mb-1">{item.info}</p>
-                    <p className="text-sm text-gray-400 mb-1">{item.description}</p>
-                    <p className="text-xs text-blue-400">{item.availability}</p>
                   </motion.div>
                 ))}
               </div>
@@ -240,9 +277,9 @@ const ContactUs = () => {
           </motion.div>
 
           {/* Contact Form - Right Side */}
-          <motion.div className="lg:w-2/3" variants={formVariants}>
-            <div className="bg-gray-900/30 backdrop-blur-sm p-8 rounded-xl border border-gray-800">
-              <h3 className="text-xl font-light mb-8 text-blue-400">Start Your Project</h3>
+          <motion.div className="lg:w-2/3 h-fit" variants={formVariants}>
+            <div className="bg-gray-900/30 backdrop-blur-sm p-5 rounded-xl border border-gray-800 h-full">
+              <h3 className="text-base font-light mb-4 text-blue-400">Start Your Project</h3>
 
               <AnimatePresence>
                 {isSubmitted && (
@@ -258,8 +295,8 @@ const ContactUs = () => {
                 )}
               </AnimatePresence>
 
-              <div className="space-y-6">
-                <p className="text-sm text-gray-400 mb-6">Fields marked with * are required</p>
+              <div className="space-y-4">
+                <p className="text-xs text-gray-400">Fields marked with * are required</p>
 
                 {/* Personal Information */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -484,8 +521,8 @@ const ContactUs = () => {
                     onChange={handleInputChange}
                     onFocus={() => setFocusedField("message")}
                     onBlur={() => setFocusedField(null)}
-                    rows={4}
-                    className="w-full px-0 py-3 text-sm bg-transparent border-0 border-b border-gray-600 focus:border-white outline-none resize-none transition-all duration-300 font-light"
+                    rows={3}
+                    className="w-full px-0 py-2 text-sm bg-transparent border-0 border-b border-gray-600 focus:border-white outline-none resize-none transition-all duration-300 font-light"
                     placeholder="Tell us about your vision..."
                     animate={{
                       borderColor: errors.message
@@ -519,7 +556,7 @@ const ContactUs = () => {
                     isLoading 
                       ? 'border-gray-700 bg-gray-800/50 cursor-not-allowed' 
                       : 'border-gray-600 hover:border-white'
-                  } px-8 py-3 transition-all duration-300 flex items-center space-x-2`}
+                  } px-6 py-2 transition-all duration-300 flex items-center space-x-2`}
                   whileHover={{ scale: isLoading ? 1 : 1.02, borderColor: isLoading ? "" : "#ffffff" }}
                   whileTap={{ scale: isLoading ? 1 : 0.98 }}
                   transition={{ type: "spring", stiffness: 400, damping: 10 }}
@@ -535,7 +572,7 @@ const ContactUs = () => {
                   ) : (
                     <>
                       <Send className="w-4 h-4" />
-                      <span>START PROJECT</span>
+                      <span>Send Message</span>
                     </>
                   )}
                 </motion.button>
