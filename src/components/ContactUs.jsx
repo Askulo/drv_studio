@@ -95,9 +95,19 @@ const ContactUs = () => {
     setIsLoading(true);
 
     try {
-      // Simulate API call - Replace with your actual API endpoint
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
+      const response = await fetch('http://localhost:3000/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to submit form');
+      }
+
+      const data = await response.json();
       setIsSubmitted(true);
       setTimeout(() => setIsSubmitted(false), 5000);
       setFormData({
