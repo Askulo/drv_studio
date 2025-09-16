@@ -22,6 +22,8 @@ import PortfolioCard from "./components/Events";
 import PortfolioSection from "./components/Events";
 import SplitHero from "./components/Events";
 import SouthSideStudios from "./components/Events";
+// import DRVEvents from "./components/EventsServices";
+import DRVSocials from "./components/Socials";
 
 const tooltipItems = [
   {
@@ -77,9 +79,16 @@ function App() {
              <PortfolioSection />
             </>
           }/>
+          <Route path="/socials" element={
+            <>
+             <DRVSocials/>
+            </>
+          }/>
 
           {<Route path="/contact" element={<ContactUs />} />}
-          {<Route path="/aboutus" element={<AboutUs />} />}
+          {<Route path="/aboutus" element={
+            <AboutUs />
+            } />}
         </Routes>
         <Footer />
       </main>

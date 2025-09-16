@@ -1,148 +1,393 @@
-import AnimatedTitle from "./AnimatedTitle";
-import Button from "./Button";
+import React, { useState, useEffect, useRef } from 'react';
+import { ChevronDown, Users, Megaphone, Edit3, Star, ArrowRight, Menu, X } from 'lucide-react';
 
-const ImageClipBox = ({ src, clipClass }) => (
-  <div className={`${clipClass} transition-all duration-700 hover:scale-105`}>
-    <img 
-      src={src} 
-      className="object-cover w-full h-full filter brightness-110 contrast-105" 
-      alt="Contact visual"
-    />
-    <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-500" />
-  </div>
-);
+const DRVSocials = () => {
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [activeService, setActiveService] = useState(0);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  
+  // Refs for GSAP animations
+  const heroRef = useRef(null);
+  const servicesRef = useRef(null);
+  const statsRef = useRef(null);
+  const ctaRef = useRef(null);
+  const serviceCardsRef = useRef([]);
 
-const Contact = () => {
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
+    // Load GSAP and ScrollTrigger
+    const loadGSAP = async () => {
+      if (typeof window !== 'undefined') {
+        const gsap = await import('https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js');
+        const ScrollTrigger = await import('https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js');
+        
+        // Register ScrollTrigger plugin
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Hero animations
+        gsap.timeline()
+          .fromTo('.hero-title', 
+            { opacity: 0, y: 100, scale: 0.8 }, 
+            { opacity: 1, y: 0, scale: 1, duration: 1.2, ease: 'power3.out' }
+          )
+          .fromTo('.hero-line', 
+            { scaleX: 0 }, 
+            { scaleX: 1, duration: 0.8, ease: 'power2.out' }, '-=0.5'
+          )
+          .fromTo('.hero-subtitle', 
+            { opacity: 0, y: 30 }, 
+            { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out' }, '-=0.3'
+          )
+          .fromTo('.hero-url', 
+            { opacity: 0, y: 20 }, 
+            { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' }, '-=0.2'
+          )
+          .fromTo('.hero-button', 
+            { opacity: 0, y: 20, scale: 0.9 }, 
+            { opacity: 1, y: 0, scale: 1, duration: 0.6, ease: 'back.out(1.7)' }, '-=0.1'
+          );
+
+        // Services section animation
+        gsap.fromTo('.services-header', 
+          { opacity: 0, y: 50 },
+          {
+            opacity: 1, 
+            y: 0, 
+            duration: 1,
+            ease: 'power2.out',
+            scrollTrigger: {
+              trigger: '.services-header',
+              start: 'top 80%',
+              toggleActions: 'play none none reverse'
+            }
+          }
+        );
+
+        // Service cards stagger animation
+        gsap.fromTo('.service-card', 
+          { opacity: 0, y: 80, scale: 0.8 },
+          {
+            opacity: 1, 
+            y: 0, 
+            scale: 1,
+            duration: 0.8,
+            ease: 'power2.out',
+            stagger: 0.2,
+            scrollTrigger: {
+              trigger: '.services-grid',
+              start: 'top 75%',
+              toggleActions: 'play none none reverse'
+            }
+          }
+        );
+
+        // Stats animation
+        gsap.fromTo('.stat-item', 
+          { opacity: 0, scale: 0.5, rotation: -180 },
+          {
+            opacity: 1, 
+            scale: 1, 
+            rotation: 0,
+            duration: 1,
+            ease: 'elastic.out(1, 0.8)',
+            stagger: 0.2,
+            scrollTrigger: {
+              trigger: '.stats-section',
+              start: 'top 80%',
+              toggleActions: 'play none none reverse'
+            }
+          }
+        );
+
+        // CTA animation
+        gsap.fromTo('.cta-content', 
+          { opacity: 0, scale: 0.8, rotationY: 45 },
+          {
+            opacity: 1, 
+            scale: 1, 
+            rotationY: 0,
+            duration: 1.2,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: '.cta-section',
+              start: 'top 80%',
+              toggleActions: 'play none none reverse'
+            }
+          }
+        );
+
+        // Parallax effect for background elements
+        gsap.to('.parallax-bg', {
+          yPercent: -50,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: 'body',
+            start: 'top top',
+            end: 'bottom top',
+            scrub: true
+          }
+        });
+      }
+    };
+
+    loadGSAP();
+  }, []);
+
+  const services = [
+    {
+      icon: <Users className="w-8 h-8" />,
+      title: "Social Media Management",
+      description: "Complete management of your social media presence across all platforms",
+      features: ["Content Strategy", "Daily Posting", "Community Engagement", "Analytics & Reporting"]
+    },
+    {
+      icon: <Megaphone className="w-8 h-8" />,
+      title: "Paid Ads (Meta, Google)",
+      description: "Targeted advertising campaigns that drive real results and ROI",
+      features: ["Campaign Strategy", "Ad Creation", "Audience Targeting", "Performance Optimization"]
+    },
+    {
+      icon: <Edit3 className="w-8 h-8" />,
+      title: "Content Creation (Reels, Posters)",
+      description: "Engaging visual content that captures attention and drives engagement",
+      features: ["Video Production", "Graphic Design", "Brand Consistency", "Trending Content"]
+    },
+    {
+      icon: <Star className="w-8 h-8" />,
+      title: "Influencer Marketing",
+      description: "Connect with the right influencers to amplify your brand message",
+      features: ["Influencer Matching", "Campaign Management", "Performance Tracking", "ROI Measurement"]
+    },
+    {
+      icon: <ArrowRight className="w-8 h-8" />,
+      title: "Branding",
+      description: "Build a cohesive brand identity that resonates with your audience",
+      features: ["Brand Strategy", "Visual Identity", "Brand Guidelines", "Market Positioning"]
+    }
+  ];
+
   return (
-    <div id="socials" className="my-20 min-h-96 w-screen px-10">
-      <div className="relative rounded-3xl bg-gradient-to-br from-black via-gray-900 to-blue-950 py-24 text-blue-50 sm:overflow-hidden shadow-2xl border border-gray-800/50 backdrop-blur-sm">
-        {/* Animated background elements */}
-        <div className="absolute inset-0 overflow-hidden rounded-3xl">
-          <div className="absolute -top-20 -right-20 w-40 h-40 bg-blue-500/20 rounded-full blur-3xl animate-pulse" />
-          <div className="absolute -bottom-32 -left-32 w-64 h-64 bg-purple-500/10 rounded-full blur-3xl animate-pulse delay-1000" />
-          <div className="absolute top-1/2 right-1/4 w-24 h-24 bg-cyan-400/15 rounded-full blur-2xl animate-bounce" style={{ animationDuration: '3s' }} />
-        </div>
+    <div className="min-h-screen bg-black text-white overflow-hidden">
+      {/* Enhanced Animated Background Elements */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        {/* Additional geometric shapes */}
+        <div className="parallax-bg absolute top-20 left-20 w-4 h-4 bg-white rounded-full opacity-60 animate-pulse animation-delay-1000"></div>
+        <div className="parallax-bg absolute top-40 right-32 w-2 h-2 bg-gray-400 rounded-full opacity-40 animate-pulse animation-delay-3000"></div>
+        <div className="parallax-bg absolute bottom-32 left-1/3 w-3 h-3 bg-gray-300 rounded-full opacity-50 animate-pulse animation-delay-5000"></div>
+      </div>
 
-        {/* Floating particles */}
-        <div className="absolute inset-0 overflow-hidden rounded-3xl">
-          {[...Array(12)].map((_, i) => (
-            <div
-              key={i}
-              className="absolute size-1 rounded-full bg-blue-400/60"
-              style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-                animationDelay: `${i * 0.5}s`,
-                animationDuration: `${3 + Math.random() * 2}s`,
-                animationName: 'float',
-                animationTimingFunction: 'ease-in-out',
-                animationIterationCount: 'infinite'
-              }}
-            />
-          ))}
-        </div>
+      {/* Navigation */}
+      
 
-        {/* Enhanced image containers with glow effects */}
-        <div className="absolute -left-20 top-0 hidden h-full w-72 overflow-hidden sm:block lg:left-20 lg:w-96">
-          <div className="relative">
-            <ImageClipBox
-              src="/img/fashion.png"
-              clipClass="contact-clip-path-1 shadow-2xl shadow-blue-500/20"
-            />
-            <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-transparent blur-xl" />
-          </div>
-          <div className="relative">
-            <ImageClipBox
-              src="/img/product.png"
-              clipClass="contact-clip-path-2 lg:translate-y-40 translate-y-60 shadow-2xl shadow-purple-500/20"
-            />
-            <div className="absolute inset-0 bg-gradient-to-l from-purple-500/20 to-transparent blur-xl translate-y-60 lg:translate-y-40" />
+      {/* Hero Section */}
+      <section id="home" className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-black to-gray-900">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center" ref={heroRef}>
+          <div>
+            <h1 className="hero-title text-5xl md:text-7xl font-bold mb-6 text-white">
+              DRV Socials
+            </h1>
+            <div className="hero-line w-24 h-1 bg-white mx-auto mb-8"></div>
+            <p className="hero-subtitle text-xl md:text-2xl mb-8 text-gray-300 max-w-3xl mx-auto font-light">
+              Elevate your digital presence with our comprehensive social media services
+            </p>
+            {/* <div className="hero-url text-lg text-gray-400 mb-12 font-mono">
+              www.socials.drvstudios.com
+            </div> */}
+            <button className="hero-button group bg-white hover:bg-gray-200 text-black px-8 py-4 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 hover:shadow-2xl border-2 border-white hover:border-gray-200">
+              <span className="flex items-center">
+                Explore Services
+                <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform duration-300" />
+              </span>
+            </button>
           </div>
         </div>
-
-        <div className="absolute -top-40 left-20 w-60 sm:top-1/2 md:left-auto md:right-10 lg:top-20 lg:w-80">
-          <div className="relative group">
-            <ImageClipBox
-              src="/img/concert.png"
-              clipClass="absolute md:scale-125 group-hover:scale-130 transition-transform duration-700"
-            />
-            <ImageClipBox
-              src="/img/concert.png"
-              clipClass="sword-man-clip-path md:scale-125 group-hover:scale-130 transition-transform duration-700"
-            />
-            <div className="absolute inset-0 bg-gradient-radial from-cyan-400/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 blur-2xl" />
-          </div>
+        
+        {/* Scroll Indicator */}
+        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+          <ChevronDown className="w-8 h-8 text-white" />
         </div>
+      </section>
 
-        {/* Main content with enhanced styling */}
-        <div className="flex flex-col items-center text-center relative z-10">
-          <div className="mb-10 relative">
-            <p className="font-general text-[10px] uppercase tracking-[0.3em] text-blue-400 relative">
-              <span className="relative z-10">Book Slot</span>
-              <div className="absolute inset-0 bg-blue-400/20 blur-xl scale-150" />
+      {/* Services Section */}
+      <section id="services" className="py-20 relative bg-gradient-to-b from-black to-gray-900">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="services-header text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 text-white">
+              Our Services
+            </h2>
+            <div className="w-24 h-1 bg-white mx-auto mb-8"></div>
+            <p className="text-xl text-gray-300 max-w-3xl mx-auto font-light">
+              Comprehensive digital solutions to grow your brand and engage your audience
             </p>
           </div>
 
-          <div className="relative mb-10">
-            <AnimatedTitle
-             title=" DRV S<b>o</b>cials: Your Complete Social Media Solutions."
+          {/* Services Grid */}
+          <div className="services-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {services.map((service, index) => (
+              <div
+                key={index}
+                className={`service-card group relative p-8 rounded-xl transition-all duration-700 cursor-pointer transform hover:scale-110 hover:-translate-y-4 border-2 overflow-hidden ${
+                  activeService === index 
+                    ? 'bg-white text-black border-white shadow-2xl shadow-white/20' 
+                    : 'bg-gray-900 text-white border-gray-700 hover:border-white hover:shadow-2xl hover:shadow-white/10 hover:bg-gray-800'
+                }`}
+                onMouseEnter={() => setActiveService(index)}
+              >
+                {/* Animated background overlay */}
+                <div className={`absolute inset-0 transition-all duration-700 opacity-0 group-hover:opacity-100 ${
+                  activeService === index 
+                    ? 'bg-gradient-to-br from-gray-100 to-white' 
+                    : 'bg-gradient-to-br from-gray-800 to-gray-700'
+                }`}></div>
+                
+                {/* Hover glow effect */}
+                <div className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-20 transition-opacity duration-700 bg-gradient-to-r from-white via-transparent to-white blur-xl"></div>
+                
+                <div className="relative z-10">
+                  <div className={`inline-flex items-center justify-center w-16 h-16 mb-6 rounded-xl transition-all duration-500 border-2 transform group-hover:rotate-12 group-hover:scale-110 ${
+                    activeService === index 
+                      ? 'bg-black text-white border-black shadow-lg' 
+                      : 'bg-black text-white border-gray-600 group-hover:border-white group-hover:shadow-white/20 group-hover:shadow-lg'
+                  }`}>
+                    <div className="transform group-hover:scale-110 transition-transform duration-300">
+                      {service.icon}
+                    </div>
+                  </div>
+                  
+                  <h3 className="text-2xl font-bold mb-4 group-hover:text-shadow-lg transition-all duration-300">
+                    {service.title}
+                  </h3>
+                  
+                  <p className={`mb-6 leading-relaxed font-light transition-all duration-300 ${
+                    activeService === index ? 'text-gray-700' : 'text-gray-300 group-hover:text-gray-100'
+                  }`}>
+                    {service.description}
+                  </p>
+                  
+                  <ul className="space-y-3">
+                    {service.features.map((feature, featureIndex) => (
+                      <li key={featureIndex} className={`flex items-center text-sm transition-all duration-300 transform group-hover:translate-x-2 ${
+                        activeService === index ? 'text-gray-600' : 'text-gray-400 group-hover:text-gray-200'
+                      }`}
+                      style={{ transitionDelay: `${featureIndex * 100}ms` }}>
+                        <div className={`w-2 h-2 rounded-full mr-3 transition-all duration-300 transform group-hover:scale-150 ${
+                          activeService === index ? 'bg-black' : 'bg-white group-hover:bg-gray-200'
+                        }`}></div>
+                        <span className="group-hover:font-medium transition-all duration-300">{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
 
-
-              className="special-font !md:text-[6.2rem] w-full font-zentry !text-5xl !font-black !leading-[.9] bg-gradient-to-br from-white via-blue-100 to-blue-300 bg-clip-text text-transparent drop-shadow-2xl"
-            />
-            <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-cyan-500/10 blur-3xl scale-110 opacity-50" />
-   
-          </div>
-
- <h1 className="text-gray-400 mb-6 text-2xl">
-   <b>Management</b>, <b>Paid Ads</b>, <b>Content Creation</b>, <b>Influencer Marketing</b>, and <b>Brand Development</b>.
-</h1>
-          <div className="relative group">
-            <Button 
-              title="contact us" 
-              containerClass="mt-10 cursor-pointer transform hover:scale-105 transition-all duration-300 hover:shadow-2xl hover:shadow-blue-500/25" 
-            />
-            <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 scale-150" />
+                  {/* Interactive hover indicator */}
+                  <div className={`absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-x-4 group-hover:translate-x-0 ${
+                    activeService === index ? 'text-black' : 'text-white'
+                  }`}>
+                    <ArrowRight className="w-5 h-5" />
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
+      </section>
 
-        {/* Subtle grid pattern overlay */}
-        <div 
-          className="absolute inset-0 opacity-5 rounded-3xl"
-          style={{
-            backgroundImage: `
-              linear-gradient(rgba(59, 130, 246, 0.1) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(59, 130, 246, 0.1) 1px, transparent 1px)
-            `,
-            backgroundSize: '50px 50px'
-          }}
-        />
+      {/* Stats Section */}
+      <section className="stats-section py-20 bg-black border-t border-gray-800">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+            <div className="stat-item group">
+              <div className="text-4xl font-bold text-white mb-2 group-hover:scale-110 transition-transform duration-300">100+</div>
+              <div className="text-gray-400 font-light">Projects Completed</div>
+            </div>
+            <div className="stat-item group">
+              <div className="text-4xl font-bold text-white mb-2 group-hover:scale-110 transition-transform duration-300">50+</div>
+              <div className="text-gray-400 font-light">Happy Clients</div>
+            </div>
+            <div className="stat-item group">
+              <div className="text-4xl font-bold text-white mb-2 group-hover:scale-110 transition-transform duration-300">5</div>
+              <div className="text-gray-400 font-light">Core Services</div>
+            </div>
+          </div>
+        </div>
+      </section>
 
-        {/* Corner accent elements */}
-        <div className="absolute top-6 left-6 w-16 h-16 border-t-2 border-l-2 border-blue-500/50 rounded-tl-2xl" />
-        <div className="absolute top-6 right-6 w-16 h-16 border-t-2 border-r-2 border-blue-500/50 rounded-tr-2xl" />
-        <div className="absolute bottom-6 left-6 w-16 h-16 border-b-2 border-l-2 border-blue-500/50 rounded-bl-2xl" />
-        <div className="absolute bottom-6 right-6 w-16 h-16 border-b-2 border-r-2 border-blue-500/50 rounded-br-2xl" />
-      </div>
+      {/* CTA Section */}
+      <section className="cta-section py-20 relative bg-gradient-to-br from-gray-900 to-black">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <div className="cta-content border-2 border-white p-12 backdrop-blur-sm bg-black/30 rounded-xl">
+            <h2 className="text-3xl md:text-4xl font-bold mb-6 text-white">
+              Ready to Transform Your Digital Presence?
+            </h2>
+            <div className="w-24 h-1 bg-white mx-auto mb-8"></div>
+            <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto font-light">
+              Let's discuss how DRV Socials can elevate your brand with our comprehensive digital marketing services.
+            </p>
+            <button className="group bg-white hover:bg-gray-200 text-black px-10 py-5 font-semibold text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl border-2 border-white hover:border-gray-200 rounded-lg">
+              <span className="flex items-center justify-center">
+                Get Started Today
+                <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform duration-300" />
+              </span>
+            </button>
+          </div>
+        </div>
+      </section>
 
-      <style>{`
-        @keyframes float {
-          0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0.7; }
-          25% { transform: translateY(-10px) rotate(90deg); opacity: 1; }
-          50% { transform: translateY(-20px) rotate(180deg); opacity: 0.7; }
-          75% { transform: translateY(-10px) rotate(270deg); opacity: 1; }
-        }
-        
-        .animate-float {
-          animation: float 4s ease-in-out infinite;
-        }
+      {/* Footer */}
+      {/* <footer className="bg-black border-t border-gray-800 py-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div className="col-span-1 md:col-span-2">
+              <h3 className="text-2xl font-bold text-white mb-4">DRV Socials</h3>
+              <p className="text-gray-400 mb-4 max-w-md">
+                Elevating brands through innovative digital marketing strategies and comprehensive social media solutions.
+              </p>
+              <div className="text-gray-400 font-mono text-sm">
+                www.socials.drvstudios.com
+              </div>
+            </div>
+            
+            <div>
+              <h4 className="text-lg font-semibold text-white mb-4">Services</h4>
+              <ul className="space-y-2 text-gray-400">
+                <li className="hover:text-white transition-colors duration-300 cursor-pointer">Social Media Management</li>
+                <li className="hover:text-white transition-colors duration-300 cursor-pointer">Paid Advertising</li>
+                <li className="hover:text-white transition-colors duration-300 cursor-pointer">Content Creation</li>
+                <li className="hover:text-white transition-colors duration-300 cursor-pointer">Influencer Marketing</li>
+              </ul>
+            </div>
+            
+            <div>
+              <h4 className="text-lg font-semibold text-white mb-4">Contact</h4>
+              <ul className="space-y-2 text-gray-400">
+                <li className="hover:text-white transition-colors duration-300 cursor-pointer">hello@drvstudios.com</li>
+                <li className="hover:text-white transition-colors duration-300 cursor-pointer">+1 (555) 123-4567</li>
+                <li className="hover:text-white transition-colors duration-300 cursor-pointer">Follow Us</li>
+              </ul>
+            </div>
+          </div>
+          
+          <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
+            <p>&copy; 2025 DRV Socials. All rights reserved.</p>
+          </div>
+        </div>
+      </footer> */}
 
-        .bg-gradient-radial {
-          background: radial-gradient(circle, var(--tw-gradient-stops));
-        }
+      <style jsx>{`
+        .animation-delay-1000 { animation-delay: 1s; }
+        .animation-delay-2000 { animation-delay: 2s; }
+        .animation-delay-3000 { animation-delay: 3s; }
+        .animation-delay-4000 { animation-delay: 4s; }
+        .animation-delay-5000 { animation-delay: 5s; }
       `}</style>
     </div>
   );
 };
 
-export default Contact;
+export default DRVSocials;

@@ -11,8 +11,8 @@ import Button from "./Button";
 const navItems = [
   { name: "DRV STUDIOS", to: "/" },
   { name: "DRV Events", to: "/events" },
-  { name: "DRV Socials", to: "/#socials" },
-  { name: "About Us", to: "/#about" },
+  { name: "DRV Socials", to: "/socials" },
+  { name: "About Us", to: "/about" },
   { name: "Contact Us", to: "/contact" },
 ];
 
