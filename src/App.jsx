@@ -62,17 +62,12 @@ function App() {
               <>
                 <Hero />
                 <About />
-                {/* <AnimatedTooltip items={tooltipItems} /> */}
-              
-                {/* <Events /> */}
-
                 <ContactPopup />
-                {/* <Story /> */}
                 <AboutUs />
-               <ScrollCarousel />
-               <Testimonials/>
-               {/* <MatterLogoContainer/> */}
-                { <Contact /> }
+                <AnimatedTooltip items={tooltipItems} />
+                <ScrollCarousel />
+                <Testimonials />
+                <Contact />
               </>
             }
           />
@@ -87,7 +82,37 @@ function App() {
 />
 
           {<Route path="/contact" element={<ContactUs />} />}
-          {/* <Route path="/aboutus" element={<AboutUs />} /> */}
+          {           <Route path="/aboutus" element={
+            <>
+              <AboutUs />
+              <AnimatedTooltip items={[
+                {
+                  id: 1,
+                  name: "Debraj Roy",
+                  designation: "Director",
+                  image: "/img/profile-1.jpg",
+                },
+                {
+                  id: 2,
+                  name: "Sahil",
+                  designation: "Creative Head",
+                  image: "/img/profile-2.jpg",
+                },
+                {
+                  id: 3,
+                  name: "Gourab",
+                  designation: "Production Manager",
+                  image: "/img/profile-3.jpg",
+                },
+                {
+                  id: 4,
+                  name: "Bairagi",
+                  designation: "Marketing Lead",
+                  image: "/img/profile-4.jpg",
+                }
+              ]} />
+            </>
+          } />}
         </Routes>
         <Footer />
       </main>

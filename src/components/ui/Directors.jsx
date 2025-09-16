@@ -7,7 +7,7 @@ import {
   AnimatePresence,
   useMotionValue,
   useSpring,
-} from "motion/react";
+} from "framer-motion";
 import AnimatedTitle from "../AnimatedTitle";
 
 export const AnimatedTooltip = ({ items }) => {
@@ -37,68 +37,88 @@ export const AnimatedTooltip = ({ items }) => {
   };
 
   return (
-    <main  className="bg-black w-full h-full ">
-      <AnimatedTitle
-        title="DRV DIRECTORS"
-        containerClass="pt-20 text-white tracking-wider text-center"
-      />
-
-      <div className="flex bg-black justify-center items-center gap-4 w-full mt-8 px-4 md:px-20 lg:px-40">
-        {items.map((item) => (
-          <div
-            className="group relative"
-            key={item.name}
-            onMouseEnter={() => setHoveredIndex(item.id)}
-            onMouseLeave={() => setHoveredIndex(null)}
-          >
-            <AnimatePresence>
-              {hoveredIndex === item.id && (
-                <motion.div
-                  initial={{ opacity: 0, y: 20, scale: 0.6 }}
-                  animate={{
-                    opacity: 1,
-                    y: 0,
-                    scale: 1,
-                    transition: {
-                      type: "spring",
-                      stiffness: 260,
-                      damping: 10,
-                    },
-                  }}
-                  exit={{ opacity: 0, y: 20, scale: 0.6 }}
-                  style={{
-                    translateX: translateX,
-                    rotate: rotate,
-                    whiteSpace: "nowrap",
-                  }}
-                  className="absolute -top-12 left-1/2 z-50 flex -translate-x-1/2 flex-col items-center justify-center rounded-md bg-black px-4 py-2 text-xs shadow-xl border border-gray-800"
-                >
-                  <div className="absolute inset-x-10 -bottom-px z-30 h-px w-[20%] bg-gradient-to-r from-transparent via-emerald-500 to-transparent" />
-                  <div className="absolute -bottom-px left-10 z-30 h-px w-[40%] bg-gradient-to-r from-transparent via-sky-500 to-transparent" />
-                  <div className="relative z-30 text-base font-bold text-white">
-                    {item.name}
+    <main className="bg-slate-950 w-full min-h-screen py-20">
+      <div className="container mx-auto px-4">
+        <AnimatedTitle
+          title="Meet Our Visionary Team"
+          containerClass="mb-16 text-white tracking-wider text-center"
+        />
+        
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto"
+        >
+          {items.map((item) => (
+            <motion.div
+              className="group relative"
+              key={item.name}
+              onMouseEnter={() => setHoveredIndex(item.id)}
+              onMouseLeave={() => setHoveredIndex(null)}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: item.id * 0.1 }}
+            >
+              <div className="relative overflow-hidden rounded-lg bg-slate-900 p-6">
+                <div className="relative mb-6">
+                  <div className="relative h-48 w-48 mx-auto">
+                    <img
+                      onMouseMove={handleMouseMove}
+                      src={item.image}
+                      alt={item.name}
+                      className="h-full w-full rounded-full object-cover border-4 border-cyan-500/30 transition-all duration-300 group-hover:scale-105 group-hover:border-cyan-500"
+                    />
+                    <div className="absolute inset-0 rounded-full bg-gradient-to-br from-cyan-500/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                   </div>
-                  <div className="text-xs text-white">{item.designation}</div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-            <img
-              onMouseMove={handleMouseMove}
-              height={100}
-              width={200}
-              src={item.image}
-              alt={item.name}
-              className="relative h-20 w-20 rounded-full border-2 border-white object-cover object-top !p-0 transition duration-500 group-hover:z-30 group-hover:scale-105"
-            />
-          </div>
-        ))}
-      </div>
-      <div className="flex justify-center items-center w-full mt-8">
-        <p className="max-w-lg text-center font-circular-web text-2xl text-blue-50 opacity-50">
-          DRV Studios - Your complete visual production partner. Established in
-          2021, we specialize in bringing your creative vision to life through
-          cinematic excellence and innovative storytelling.
-        </p>
+                  <motion.div
+                    className="absolute -inset-0.5 rounded-full bg-gradient-to-r from-cyan-500 to-blue-500 opacity-0 blur group-hover:opacity-30 transition duration-300"
+                    style={{
+                      translateX: translateX,
+                      rotate: rotate,
+                    }}
+                  ></motion.div>
+                </div>
+
+                <div className="text-center relative z-10">
+                  <h3 className="text-xl font-bold text-white mb-2">{item.name}</h3>
+                  <p className="text-cyan-400 font-medium mb-4">{item.designation}</p>
+                  
+                  <AnimatePresence>
+                    {hoveredIndex === item.id && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 10 }}
+                        className="absolute -bottom-4 left-0 right-0 bg-slate-900/90 backdrop-blur-sm p-4 rounded-lg border border-cyan-500/20"
+                      >
+                        <div className="text-sm text-gray-300">
+                          {item.id === 1 && "Visionary leader shaping the future of visual storytelling"}
+                          {item.id === 2 && "Innovative creative mind behind our stunning productions"}
+                          {item.id === 3 && "Expert in seamless project execution and team coordination"}
+                          {item.id === 4 && "Strategic genius connecting brands with audiences"}
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.5 }}
+          className="mt-20 text-center max-w-3xl mx-auto"
+        >
+          <p className="text-2xl text-cyan-50/80 font-light leading-relaxed">
+            DRV Studios - Your complete visual production partner. Established in
+            2021, we specialize in bringing your creative vision to life through
+            cinematic excellence and innovative storytelling.
+          </p>
+        </motion.div>
       </div>
     </main>
   );
