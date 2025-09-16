@@ -66,7 +66,7 @@ function App() {
                 <About />
                 <ContactPopup />
                 <AboutUs />
-                <AnimatedTooltip items={tooltipItems} />
+                {/* <AnimatedTooltip items={tooltipItems} /> */}
                 <ScrollCarousel />
                 <Testimonials />
                 {/* <Contact /> */}
@@ -86,8 +86,11 @@ function App() {
           }/>
 
           {<Route path="/contact" element={<ContactUs />} />}
-          {<Route path="/aboutus" element={
+          {<Route path="/about" element={
+            <>
             <AboutUs />
+            <AnimatedTooltip items={tooltipItems} />
+            </>
             } />}
         </Routes>
         <Footer />

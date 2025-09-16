@@ -3,42 +3,6 @@
 import { motion } from "framer-motion";
 import { cn } from "../../lib/utils";
 
-export function LampDemo() {
-  return (
-    <LampContainer >
-      <motion.h1
-        initial={{ opacity: 0.5, y: 100 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{
-          delay: 0.3,
-          duration: 0.8,
-          ease: "easeInOut",
-        }}
-       
-        className="mt-8 bg-gradient-to-br from-cyan-300 to-cyan-600 py-4 bg-clip-text text-center text-4xl font-bold tracking-tight text-transparent md:text-7xl"
-      >
-        DRV Studios <br /> 
-        <span className="text-slate-300 text-2xl md:text-4xl font-light">
-          Crafting Stories Through Stunning Visuals
-        </span>
-      </motion.h1>
-
-      <motion.p
-        initial={{ opacity: 0, y: 50 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.6, duration: 0.8, ease: "easeInOut" }}
-       
-        className="mt-6 max-w-3xl text-center text-lg text-slate-400 md:text-2xl"
-      >
-        At <span className="font-semibold text-cyan-400">DRV Studios</span>, we
-        believe every frame tells a story. From corporate films and commercials
-        to music videos and creative storytelling — our team blends innovation,
-        artistry, and cutting-edge technology to bring your vision to life.
-      </motion.p>
-    </LampContainer>
-  );
-}
-
 const MarqueeSection = () => {
   const services = [
     "Corporate Films",
@@ -59,7 +23,6 @@ const MarqueeSection = () => {
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.9, duration: 0.8, ease: "easeInOut" }}
       className="w-full overflow-hidden px-4"
-      
     >
       <div className="relative">
         {/* Gradient overlays for smooth fade effect */}
@@ -120,12 +83,11 @@ const MarqueeSection = () => {
   );
 };
 
-export const LampContainer = ({ children, className }) => {
+const LampContainer = ({ children, className }) => {
   return (
     <div
-    id="about"
+      id="about"
       className={cn(
-        
         "relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-slate-950 w-full rounded-md z-0",
         className
       )}
@@ -174,10 +136,10 @@ export const LampContainer = ({ children, className }) => {
           initial={{ width: "15rem" }}
           whileInView={{ width: "30rem" }}
           transition={{ delay: 0.3, duration: 0.8, ease: "easeInOut" }}
-          className="absolute inset-auto z-50 h-0.5 w-[30rem] -translate-y-[7rem] bg-cyan-400 "
+          className="absolute inset-auto z-50 h-0.5 w-[30rem] -translate-y-[7rem] bg-cyan-400"
         ></motion.div>
 
-        <div className="absolute inset-auto z-40 h-44 w-full -translate-y-[12.5rem] bg-slate-950 "></div>
+        <div className="absolute inset-auto z-40 h-44 w-full -translate-y-[12.5rem] bg-slate-950"></div>
       </div>
 
       {/* Content */}
@@ -193,4 +155,40 @@ export const LampContainer = ({ children, className }) => {
   );
 };
 
-export default LampDemo;
+const AboutUs = () => {
+  return (
+    <div className="w-full">
+      <LampContainer>
+        <motion.h1
+          initial={{ opacity: 0.5, y: 100 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{
+            delay: 0.3,
+            duration: 0.8,
+            ease: "easeInOut",
+          }}
+          className="mt-28 bg-gradient-to-br from-cyan-300 to-cyan-600 py-4 bg-clip-text text-center text-4xl font-bold tracking-tight text-transparent md:text-7xl"
+        >
+          DRV Studios <br /> 
+          <span className="text-slate-300 text-2xl md:text-4xl font-light">
+            Crafting Stories Through Stunning Visuals
+          </span>
+        </motion.h1>
+
+        <motion.p
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.6, duration: 0.8, ease: "easeInOut" }}
+          className="mt-6 max-w-3xl text-center text-lg text-slate-400 md:text-2xl"
+        >
+          At <span className="font-semibold text-cyan-400">DRV Studios</span>, we
+          believe every frame tells a story. From corporate films and commercials
+          to music videos and creative storytelling — our team blends innovation,
+          artistry, and cutting-edge technology to bring your vision to life.
+        </motion.p>
+      </LampContainer>
+    </div>
+  );
+};
+
+export default AboutUs;
