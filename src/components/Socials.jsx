@@ -166,31 +166,43 @@ const DRVSocials = () => {
           gsap.to(titleEl, { y: -6, duration: 2.5, yoyo: true, repeat: -1, ease: 'sine.inOut' });
         }
 
-        // 3D tilt for service cards (CSS 3D)
-        const cards = document.querySelectorAll('.service-card');
+        // Enhanced 3D tilt for new service cards
+        const cards = document.querySelectorAll('.service-card-3d');
         cards.forEach((card) => {
-          const inner = card.querySelector('.relative.z-10');
+          const inner = card.querySelector('.service-card-inner');
           if (!inner) return;
-          card.style.perspective = '800px';
-          inner.style.transformStyle = 'preserve-3d';
-          const rX = gsap.quickTo(inner, 'rotationX', { duration: 0.3, ease: 'power3.out' });
-          const rY = gsap.quickTo(inner, 'rotationY', { duration: 0.3, ease: 'power3.out' });
-          const sc = gsap.quickTo(inner, 'scale',     { duration: 0.3, ease: 'power3.out' });
+          
+          const rX = gsap.quickTo(inner, 'rotationX', { duration: 0.4, ease: 'power3.out' });
+          const rY = gsap.quickTo(inner, 'rotationY', { duration: 0.4, ease: 'power3.out' });
+          const rZ = gsap.quickTo(inner, 'rotationZ', { duration: 0.4, ease: 'power3.out' });
+          const sc = gsap.quickTo(inner, 'scale',     { duration: 0.4, ease: 'power3.out' });
 
           card.addEventListener('mousemove', (e) => {
             const rect = card.getBoundingClientRect();
             const x = (e.clientX - rect.left) / rect.width;
             const y = (e.clientY - rect.top) / rect.height;
-            rY((x - 0.5) * 18);
-            rX(-(y - 0.5) * 14);
-            sc(1.04);
+            rY((x - 0.5) * 25);
+            rX(-(y - 0.5) * 20);
+            rZ((x - 0.5) * 5);
+            sc(1.05);
           });
 
           card.addEventListener('mouseleave', () => {
             rX(0);
             rY(0);
+            rZ(0);
             sc(1);
           });
+        });
+
+        // Floating animation for service cards
+        gsap.to('.service-card-3d', {
+          y: -8,
+          duration: 3,
+          ease: 'sine.inOut',
+          yoyo: true,
+          repeat: -1,
+          stagger: 0.5
         });
       }
     };
@@ -241,9 +253,6 @@ const DRVSocials = () => {
         <div className="parallax-bg absolute bottom-32 left-1/3 w-3 h-3 bg-gray-300 rounded-full opacity-50 animate-pulse animation-delay-5000"></div>
       </div>
 
-      {/* Navigation */}
-      
-
       {/* Hero Section */}
       <section id="home" className="relative min-h-screen flex items-center justify-center">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center" ref={heroRef}>
@@ -257,10 +266,7 @@ const DRVSocials = () => {
             <p className="hero-subtitle text-xl md:text-2xl mb-8 text-gray-300 max-w-3xl mx-auto font-light">
               Elevate your digital presence with our comprehensive social media services
             </p>
-            {/* <div className="hero-url text-lg text-gray-400 mb-12 font-mono">
-              www.socials.drvstudios.com
-            </div> */}
-            <button className="hero-button group bg-white hover:bg-gray-200 text-black px-8 py-4 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 hover:shadow-2xl border-2 border-white hover:border-gray-200">
+            <button className="hero-button group bg-white hover:bg-gray-100 text-gray-900 px-8 py-4 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 hover:shadow-2xl border-2 border-white hover:border-gray-100">
               <span className="flex items-center">
                 Explore Services
                 <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform duration-300" />
@@ -278,83 +284,120 @@ const DRVSocials = () => {
       {/* Services Section */}
       <section id="services" className="py-20 relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="services-header text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 text-white">
+          <div className="services-header text-center mb-20">
+            <h2 className="text-4xl md:text-6xl font-bold mb-6 text-white services-title">
               Our Services
             </h2>
-            <div className="w-24 h-1 bg-white mx-auto mb-8"></div>
-            <p className="text-xl text-gray-300 max-w-3xl mx-auto font-light">
-              Comprehensive digital solutions to grow your brand and engage your audience
+            <div className="w-32 h-1 bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 mx-auto mb-8 rounded-full"></div>
+            <p className="text-xl md:text-2xl text-gray-300 max-w-4xl mx-auto font-light">
+              Experience the future of digital marketing with our cutting-edge solutions
             </p>
           </div>
 
           {/* Services Grid */}
-          <div className="services-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {services.map((service, index) => (
-              <div
-                key={index}
-                className={`service-card group relative p-8 rounded-xl transition-all duration-700 cursor-pointer transform hover:scale-110 hover:-translate-y-4 border-2 overflow-hidden ${
-                  activeService === index 
-                    ? 'bg-white text-black border-white shadow-2xl shadow-white/20' 
-                    : 'bg-gray-900 text-white border-gray-700 hover:border-white hover:shadow-2xl hover:shadow-white/10 hover:bg-gray-800'
-                }`}
-                onMouseEnter={() => setActiveService(index)}
-              >
-                {/* Animated background overlay */}
-                <div className={`absolute inset-0 transition-all duration-700 opacity-0 group-hover:opacity-100 ${
-                  activeService === index 
-                    ? 'bg-gradient-to-br from-gray-100 to-white' 
-                    : 'bg-gradient-to-br from-gray-800 to-gray-700'
-                }`}></div>
-                
-                {/* Hover glow effect */}
-                <div className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-20 transition-opacity duration-700 bg-gradient-to-r from-white via-transparent to-white blur-xl"></div>
-                
-                <div className="relative z-10">
-                  <div className={`inline-flex items-center justify-center w-16 h-16 mb-6 rounded-xl transition-all duration-500 border-2 transform group-hover:rotate-12 group-hover:scale-110 ${
-                    activeService === index 
-                      ? 'bg-black text-white border-black shadow-lg' 
-                      : 'bg-black text-white border-gray-600 group-hover:border-white group-hover:shadow-white/20 group-hover:shadow-lg'
-                  }`}>
-                    <div className="transform group-hover:scale-110 transition-transform duration-300">
-                      {service.icon}
-                    </div>
-                  </div>
-                  
-                  <h3 className="text-2xl font-bold mb-4 group-hover:text-shadow-lg transition-all duration-300">
-                    {service.title}
-                  </h3>
-                  
-                  <p className={`mb-6 leading-relaxed font-light transition-all duration-300 ${
-                    activeService === index ? 'text-gray-700' : 'text-gray-300 group-hover:text-gray-100'
-                  }`}>
-                    {service.description}
-                  </p>
-                  
-                  <ul className="space-y-3">
-                    {service.features.map((feature, featureIndex) => (
-                      <li key={featureIndex} className={`flex items-center text-sm transition-all duration-300 transform group-hover:translate-x-2 ${
-                        activeService === index ? 'text-gray-600' : 'text-gray-400 group-hover:text-gray-200'
-                      }`}
-                      style={{ transitionDelay: `${featureIndex * 100}ms` }}>
-                        <div className={`w-2 h-2 rounded-full mr-3 transition-all duration-300 transform group-hover:scale-150 ${
-                          activeService === index ? 'bg-black' : 'bg-white group-hover:bg-gray-200'
-                        }`}></div>
-                        <span className="group-hover:font-medium transition-all duration-300">{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
+          <div className="services-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12">
+            {services.map((service, index) => {
+              const colors = [
+                { bg: 'from-pink-500 to-rose-600', shadow: 'shadow-pink-500/50', accent: 'bg-pink-500', glow: 'group-hover:shadow-pink-500/30' },
+                { bg: 'from-blue-500 to-cyan-600', shadow: 'shadow-blue-500/50', accent: 'bg-blue-500', glow: 'group-hover:shadow-blue-500/30' },
+                { bg: 'from-purple-500 to-violet-600', shadow: 'shadow-purple-500/50', accent: 'bg-purple-500', glow: 'group-hover:shadow-purple-500/30' },
+                { bg: 'from-green-500 to-emerald-600', shadow: 'shadow-green-500/50', accent: 'bg-green-500', glow: 'group-hover:shadow-green-500/30' },
+                { bg: 'from-orange-500 to-red-600', shadow: 'shadow-orange-500/50', accent: 'bg-orange-500', glow: 'group-hover:shadow-orange-500/30' }
+              ];
+              const color = colors[index % colors.length];
+              
+              return (
+                <div
+                  key={index}
+                  className="service-card-3d group perspective-1000"
+                  onMouseEnter={() => setActiveService(index)}
+                >
+                  <div className="service-card-inner relative preserve-3d transition-all duration-700 cursor-pointer group-hover:rotate-y-12 group-hover:rotate-x-6">
+                    {/* Main Card */}
+                    <div className={`relative p-8 h-96 rounded-2xl bg-gradient-to-br ${color.bg} shadow-2xl ${color.shadow} transition-all duration-700 transform group-hover:scale-105 group-hover:-translate-y-6 ${color.glow} group-hover:shadow-2xl overflow-hidden border border-white/20`}>
+                      {/* Animated Background Pattern */}
+                      <div className="absolute inset-0 opacity-20">
+                        <div className="absolute top-4 right-4 w-20 h-20 bg-white/10 rounded-full animate-pulse"></div>
+                        <div className="absolute bottom-4 left-4 w-16 h-16 bg-white/10 rounded-full animate-pulse animation-delay-2000"></div>
+                        <div className="absolute top-1/2 left-1/2 w-32 h-32 bg-white/5 rounded-full transform -translate-x-1/2 -translate-y-1/2 animate-spin-slow"></div>
+                      </div>
 
-                  {/* Interactive hover indicator */}
-                  <div className={`absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-x-4 group-hover:translate-x-0 ${
-                    activeService === index ? 'text-black' : 'text-white'
-                  }`}>
-                    <ArrowRight className="w-5 h-5" />
+                      {/* Floating Particles */}
+                      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                        <div className="absolute top-1/4 left-1/4 w-1 h-1 bg-white rounded-full animate-ping animation-delay-1000"></div>
+                        <div className="absolute top-3/4 right-1/3 w-1 h-1 bg-white rounded-full animate-ping animation-delay-3000"></div>
+                        <div className="absolute bottom-1/3 left-2/3 w-1 h-1 bg-white rounded-full animate-ping animation-delay-5000"></div>
+                      </div>
+
+                      {/* Gradient Shine Effect */}
+                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out"></div>
+
+                      <div className="relative z-10 h-full flex flex-col">
+                        {/* 3D Icon Container */}
+                        <div className="relative mb-6">
+                          <div className={`inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-white/20 backdrop-blur-sm border border-white/30 transition-all duration-500 transform group-hover:rotate-12 group-hover:scale-110 shadow-lg group-hover:shadow-xl`}>
+                            <div className="relative z-10 text-white transform group-hover:scale-125 transition-transform duration-300 group-hover:rotate-6">
+                              {service.icon}
+                            </div>
+                            {/* Icon Glow */}
+                            <div className={`absolute inset-0 rounded-2xl ${color.accent} opacity-0 group-hover:opacity-20 blur-xl transition-all duration-500`}></div>
+                          </div>
+                          
+                          {/* Floating Ring */}
+                          <div className="absolute -inset-2 border-2 border-white/20 rounded-3xl opacity-0 group-hover:opacity-100 transition-all duration-500 transform group-hover:rotate-90 group-hover:scale-110"></div>
+                        </div>
+                        
+                        <div className="flex-1 flex flex-col justify-between">
+                          <div>
+                            <h3 className="text-2xl font-bold mb-4 text-white group-hover:text-shadow-lg transition-all duration-300 transform group-hover:translate-y-1">
+                              {service.title}
+                            </h3>
+                            
+                            <p className="text-white/90 leading-relaxed font-light mb-6 transition-all duration-300 group-hover:text-white">
+                              {service.description}
+                            </p>
+                          </div>
+                          
+                          <ul className="space-y-3">
+                            {service.features.map((feature, featureIndex) => (
+                              <li 
+                                key={featureIndex} 
+                                className="flex items-center text-sm text-white/80 transition-all duration-500 transform group-hover:translate-x-2 group-hover:text-white"
+                                style={{ transitionDelay: `${featureIndex * 100}ms` }}
+                              >
+                                <div className="w-2 h-2 rounded-full bg-white/60 mr-3 transition-all duration-300 transform group-hover:scale-150 group-hover:bg-white"></div>
+                                <span className="group-hover:font-medium transition-all duration-300">{feature}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+
+                        {/* Hover Action Button */}
+                        <div className="absolute bottom-6 right-6 opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-y-4 group-hover:translate-y-0">
+                          <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center border border-white/30 group-hover:bg-white/30 transition-all duration-300 group-hover:scale-110">
+                            <ArrowRight className="w-5 h-5 text-white transform group-hover:translate-x-1 transition-transform duration-300" />
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Card Number */}
+                      <div className="absolute top-4 left-4 text-6xl font-black text-white/10 group-hover:text-white/20 transition-all duration-300 group-hover:scale-110">
+                        0{index + 1}
+                      </div>
+                    </div>
+
+                    {/* Shadow/Reflection */}
+                    <div className={`absolute inset-0 top-4 bg-gradient-to-br ${color.bg} rounded-2xl blur-xl opacity-50 group-hover:opacity-70 transition-all duration-700 transform translate-z-[-50px] scale-95 group-hover:scale-100`}></div>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
+
+          {/* Floating Background Elements */}
+          <div className="absolute top-20 left-10 w-32 h-32 bg-gradient-to-r from-pink-500/10 to-purple-500/10 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute bottom-20 right-10 w-40 h-40 bg-gradient-to-r from-blue-500/10 to-cyan-500/10 rounded-full blur-3xl animate-pulse animation-delay-2000"></div>
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-gradient-to-r from-purple-500/5 to-pink-500/5 rounded-full blur-3xl animate-pulse animation-delay-4000"></div>
         </div>
       </section>
 
@@ -381,7 +424,7 @@ const DRVSocials = () => {
       {/* CTA Section */}
       <section className="cta-section py-20 relative">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="cta-content border-2 border-white p-12 backdrop-blur-sm bg-black/30 rounded-xl">
+          <div className="cta-content border-2 border-white p-12 backdrop-blur-sm bg-white/10 rounded-xl">
             <h2 className="text-3xl md:text-4xl font-bold mb-6 text-white">
               Ready to Transform Your Digital Presence?
             </h2>
@@ -389,7 +432,7 @@ const DRVSocials = () => {
             <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto font-light">
               Let's discuss how DRV Socials can elevate your brand with our comprehensive digital marketing services.
             </p>
-            <button className="group bg-white hover:bg-gray-200 text-black px-10 py-5 font-semibold text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl border-2 border-white hover:border-gray-200 rounded-lg">
+            <button className="group bg-white hover:bg-gray-100 text-gray-900 px-10 py-5 font-semibold text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl border-2 border-white hover:border-gray-100 rounded-lg">
               <span className="flex items-center justify-center">
                 Get Started Today
                 <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform duration-300" />
@@ -398,46 +441,6 @@ const DRVSocials = () => {
           </div>
         </div>
       </section>
-
-      {/* Footer */}
-      {/* <footer className="bg-black border-t border-gray-800 py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div className="col-span-1 md:col-span-2">
-              <h3 className="text-2xl font-bold text-white mb-4">DRV Socials</h3>
-              <p className="text-gray-400 mb-4 max-w-md">
-                Elevating brands through innovative digital marketing strategies and comprehensive social media solutions.
-              </p>
-              <div className="text-gray-400 font-mono text-sm">
-                www.socials.drvstudios.com
-              </div>
-            </div>
-            
-            <div>
-              <h4 className="text-lg font-semibold text-white mb-4">Services</h4>
-              <ul className="space-y-2 text-gray-400">
-                <li className="hover:text-white transition-colors duration-300 cursor-pointer">Social Media Management</li>
-                <li className="hover:text-white transition-colors duration-300 cursor-pointer">Paid Advertising</li>
-                <li className="hover:text-white transition-colors duration-300 cursor-pointer">Content Creation</li>
-                <li className="hover:text-white transition-colors duration-300 cursor-pointer">Influencer Marketing</li>
-              </ul>
-            </div>
-            
-            <div>
-              <h4 className="text-lg font-semibold text-white mb-4">Contact</h4>
-              <ul className="space-y-2 text-gray-400">
-                <li className="hover:text-white transition-colors duration-300 cursor-pointer">hello@drvstudios.com</li>
-                <li className="hover:text-white transition-colors duration-300 cursor-pointer">+1 (555) 123-4567</li>
-                <li className="hover:text-white transition-colors duration-300 cursor-pointer">Follow Us</li>
-              </ul>
-            </div>
-          </div>
-          
-          <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-            <p>&copy; 2025 DRV Socials. All rights reserved.</p>
-          </div>
-        </div>
-      </footer> */}
 
       <style jsx>{`
         .animation-delay-1000 { animation-delay: 1s; }
@@ -469,10 +472,10 @@ const DRVSocials = () => {
           will-change: transform, filter;
           text-shadow:
             0.5px 0.5px 0px rgba(255,255,255,0.25),
-            0 2px 0 #111,
-            0 3px 0 #0d0d0d,
-            0 4px 0 #0a0a0a,
-            0 5px 0 #070707,
+            0 2px 0 #fff,
+            0 3px 0 #f5f5f5,
+            0 4px 0 #f0f0f0,
+            0 5px 0 #ebebeb,
             0 10px 30px rgba(124,58,237,0.35);
           filter: drop-shadow(0 8px 30px rgba(34,211,238,0.2));
         }
@@ -491,9 +494,52 @@ const DRVSocials = () => {
           0% { transform: translateX(-120%) translateZ(2px) skewX(-10deg); }
           100% { transform: translateX(120%) translateZ(2px) skewX(-10deg); }
         }
-        @media (prefers-reduced-motion: reduce) {
-          .drv-3d { animation: none !important; }
-          .drv-3d::after { animation: none !important; }
+        /* 3D Service Cards */
+        .service-card-3d {
+          perspective: 1200px;
+          transform-style: preserve-3d;
+        }
+        .service-card-inner {
+          transform-style: preserve-3d;
+          will-change: transform;
+        }
+        .perspective-1000 {
+          perspective: 1000px;
+        }
+        .preserve-3d {
+          transform-style: preserve-3d;
+        }
+        .rotate-y-12 {
+          transform: rotateY(12deg);
+        }
+        .rotate-x-6 {
+          transform: rotateX(6deg);
+        }
+        .translate-z-[-50px] {
+          transform: translateZ(-50px);
+        }
+        .animate-spin-slow {
+          animation: spin 20s linear infinite;
+        }
+        @keyframes float {
+          0%, 100% { transform: translateY(0px) rotate(0deg); }
+          50% { transform: translateY(-20px) rotate(10deg); }
+        }
+        .animate-float {
+          animation: float 6s ease-in-out infinite;
+        }
+        
+        /* Enhanced service card animations */
+        .service-card-3d:hover .service-card-inner {
+          transform: rotateY(12deg) rotateX(6deg) translateZ(20px);
+        }
+        
+        /* Service card gradients and effects */
+        .services-title {
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          -webkit-background-clip: text;
+          background-clip: text;
+          color: transparent;
         }
       `}</style>
 
