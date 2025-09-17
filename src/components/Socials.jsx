@@ -134,6 +134,64 @@ const DRVSocials = () => {
             scrub: true
           }
         });
+
+        // 3D interactive hero title tilt (CSS 3D)
+        const heroEl = document.querySelector('.hero-3d');
+        const titleEl = document.querySelector('.drv-3d');
+        if (heroEl && titleEl) {
+          const rotateToX = gsap.quickTo(titleEl, 'rotationX', { duration: 0.4, ease: 'power3.out' });
+          const rotateToY = gsap.quickTo(titleEl, 'rotationY', { duration: 0.4, ease: 'power3.out' });
+          const toScale   = gsap.quickTo(titleEl, 'scale',      { duration: 0.4, ease: 'power3.out' });
+
+          heroEl.addEventListener('mousemove', (e) => {
+            const rect = heroEl.getBoundingClientRect();
+            const x = (e.clientX - rect.left) / rect.width;
+            const y = (e.clientY - rect.top) / rect.height;
+            const ry = (x - 0.5) * 20;  // rotateY based on horizontal
+            const rx = -(y - 0.5) * 15; // rotateX based on vertical
+            rotateToX(rx);
+            rotateToY(ry);
+            toScale(1.02);
+          });
+
+          heroEl.addEventListener('mouseleave', () => {
+            rotateToX(0);
+            rotateToY(0);
+            toScale(1);
+          });
+        }
+
+        // Subtle floating motion for the title
+        if (titleEl) {
+          gsap.to(titleEl, { y: -6, duration: 2.5, yoyo: true, repeat: -1, ease: 'sine.inOut' });
+        }
+
+        // 3D tilt for service cards (CSS 3D)
+        const cards = document.querySelectorAll('.service-card');
+        cards.forEach((card) => {
+          const inner = card.querySelector('.relative.z-10');
+          if (!inner) return;
+          card.style.perspective = '800px';
+          inner.style.transformStyle = 'preserve-3d';
+          const rX = gsap.quickTo(inner, 'rotationX', { duration: 0.3, ease: 'power3.out' });
+          const rY = gsap.quickTo(inner, 'rotationY', { duration: 0.3, ease: 'power3.out' });
+          const sc = gsap.quickTo(inner, 'scale',     { duration: 0.3, ease: 'power3.out' });
+
+          card.addEventListener('mousemove', (e) => {
+            const rect = card.getBoundingClientRect();
+            const x = (e.clientX - rect.left) / rect.width;
+            const y = (e.clientY - rect.top) / rect.height;
+            rY((x - 0.5) * 18);
+            rX(-(y - 0.5) * 14);
+            sc(1.04);
+          });
+
+          card.addEventListener('mouseleave', () => {
+            rX(0);
+            rY(0);
+            sc(1);
+          });
+        });
       }
     };
 
@@ -174,9 +232,9 @@ const DRVSocials = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-black text-white overflow-hidden">
+    <div className="socials-bg min-h-screen text-white overflow-hidden">
       {/* Enhanced Animated Background Elements */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+      <div className="fixed inset-0 overflow-hidden pointer-events-none socials-bg-overlay">
         {/* Additional geometric shapes */}
         <div className="parallax-bg absolute top-20 left-20 w-4 h-4 bg-white rounded-full opacity-60 animate-pulse animation-delay-1000"></div>
         <div className="parallax-bg absolute top-40 right-32 w-2 h-2 bg-gray-400 rounded-full opacity-40 animate-pulse animation-delay-3000"></div>
@@ -187,12 +245,14 @@ const DRVSocials = () => {
       
 
       {/* Hero Section */}
-      <section id="home" className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-black to-gray-900">
+      <section id="home" className="relative min-h-screen flex items-center justify-center">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center" ref={heroRef}>
           <div>
-            <h1 className="hero-title text-5xl md:text-7xl font-bold mb-6 text-white">
-              DRV Socials
-            </h1>
+            <div className="hero-3d relative">
+              <h1 className="m-0 p-0">
+                <span className="drv-3d hero-title">DRV Socials</span>
+              </h1>
+            </div>
             <div className="hero-line w-24 h-1 bg-white mx-auto mb-8"></div>
             <p className="hero-subtitle text-xl md:text-2xl mb-8 text-gray-300 max-w-3xl mx-auto font-light">
               Elevate your digital presence with our comprehensive social media services
@@ -216,7 +276,7 @@ const DRVSocials = () => {
       </section>
 
       {/* Services Section */}
-      <section id="services" className="py-20 relative bg-gradient-to-b from-black to-gray-900">
+      <section id="services" className="py-20 relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="services-header text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold mb-6 text-white">
@@ -299,7 +359,7 @@ const DRVSocials = () => {
       </section>
 
       {/* Stats Section */}
-      <section className="stats-section py-20 bg-black border-t border-gray-800">
+      <section className="stats-section py-20 border-t border-white/10">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
             <div className="stat-item group">
@@ -319,7 +379,7 @@ const DRVSocials = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="cta-section py-20 relative bg-gradient-to-br from-gray-900 to-black">
+      <section className="cta-section py-20 relative">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="cta-content border-2 border-white p-12 backdrop-blur-sm bg-black/30 rounded-xl">
             <h2 className="text-3xl md:text-4xl font-bold mb-6 text-white">
@@ -385,6 +445,85 @@ const DRVSocials = () => {
         .animation-delay-3000 { animation-delay: 3s; }
         .animation-delay-4000 { animation-delay: 4s; }
         .animation-delay-5000 { animation-delay: 5s; }
+
+        /* 3D HERO TITLE */
+        .hero-3d {
+          perspective: 900px;
+          perspective-origin: 50% 50%;
+          display: flex;
+          justify-content: center;
+          margin-bottom: 1.5rem;
+        }
+        .drv-3d {
+          display: inline-block;
+          font-weight: 800;
+          font-size: clamp(48px, 8vw, 96px);
+          line-height: 1;
+          letter-spacing: 0.02em;
+          background: conic-gradient(from 180deg at 50% 50%, #7c3aed, #22d3ee, #f59e0b, #ec4899, #7c3aed);
+          -webkit-background-clip: text;
+          background-clip: text;
+          color: transparent;
+          position: relative;
+          transform-style: preserve-3d;
+          will-change: transform, filter;
+          text-shadow:
+            0.5px 0.5px 0px rgba(255,255,255,0.25),
+            0 2px 0 #111,
+            0 3px 0 #0d0d0d,
+            0 4px 0 #0a0a0a,
+            0 5px 0 #070707,
+            0 10px 30px rgba(124,58,237,0.35);
+          filter: drop-shadow(0 8px 30px rgba(34,211,238,0.2));
+        }
+        .drv-3d::after {
+          content: '';
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(120deg, transparent 40%, rgba(255,255,255,0.25) 50%, transparent 60%);
+          transform: translateZ(2px);
+          mix-blend-mode: screen;
+          pointer-events: none;
+          animation: sweep 6s linear infinite;
+          opacity: 0.7;
+        }
+        @keyframes sweep {
+          0% { transform: translateX(-120%) translateZ(2px) skewX(-10deg); }
+          100% { transform: translateX(120%) translateZ(2px) skewX(-10deg); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .drv-3d { animation: none !important; }
+          .drv-3d::after { animation: none !important; }
+        }
+      `}</style>
+
+      <style jsx>{`
+        /* PAGE-WIDE PURPLE BACKGROUND */
+        .socials-bg {
+          background:
+            radial-gradient(1000px 600px at -10% -10%, rgba(124,58,237,0.35), transparent 60%), /* violet */
+            radial-gradient(900px 500px at 110% 0%, rgba(79,183,221,0.28), transparent 65%),     /* blue/teal */
+            radial-gradient(700px 400px at 30% 120%, rgba(237,255,102,0.16), transparent 60%),  /* yellow accent */
+            linear-gradient(180deg, #140a28 0%, #0f0a1d 50%, #0b0b18 100%);
+        }
+        .socials-bg-overlay::before {
+          content: '';
+          position: absolute;
+          inset: 0;
+          background: radial-gradient(800px 400px at 50% 10%, rgba(255,255,255,0.06), transparent 60%);
+          pointer-events: none;
+        }
+
+        /* optional faint grid for depth */
+        .socials-bg-overlay::after {
+          content: '';
+          position: absolute;
+          inset: 0;
+          background-image: linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px);
+          background-size: 56px 56px;
+          mask-image: radial-gradient(80% 80% at 50% 20%, rgba(0,0,0,0.45), transparent 70%);
+          pointer-events: none;
+        }
       `}</style>
     </div>
   );
